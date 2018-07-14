@@ -1,9 +1,7 @@
 package Model;
 
-import java.math.BigDecimal;
-
-
 public class Position {
+    
     private String address;
     private String lat;
     private String lng;
