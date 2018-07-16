@@ -3,8 +3,8 @@ package Model;
 public class TimeDriving { 
     private String origin;
     private String destination;
-    private Double time;
-    private Double distance;
+    private Integer time;
+    private Integer distance;
 
     public String getOrigin() {
         return origin;
@@ -22,23 +22,23 @@ public class TimeDriving {
         this.destination = destination;
     }
 
-    public Double getTime() {
+    public Integer getTime() {
         return time;
     }
 
-    public void setTime(Double time) {
+    public void setTime(Integer time) {
         this.time = time;
     }
 
-    public Double getDistance() {
+    public Integer getDistance() {
         return distance;
     }
 
-    public void setDistance(Double distance) {
+    public void setDistance(Integer distance) {
         this.distance = distance;
     }
 
-    public TimeDriving(String origin, String destination, Double time, Double distance) {
+    public TimeDriving(String origin, String destination, Integer time, Integer distance) {
         this.origin = origin;
         this.destination = destination;
         this.time = time;
@@ -46,7 +46,8 @@ public class TimeDriving {
     }
     
     public TimeDriving(){
-        
+        this.time = 0;
+        this.distance = 0;
     }
     
 }

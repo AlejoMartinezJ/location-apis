@@ -23,7 +23,7 @@ public class LocationServiceImpl implements LocationService{
 
         // google maps api endpoint 
     public static final String GOOGLE_MAPS_API_LOCATION_ENDPOINT = "http://maps.googleapis.com/maps/api/geocode/json?address={address}&sensor=false"; 
-    public static final String GOOGLE_MAPS_API_DISTANCE_ENDPOINT = "http://maps.googleapis.com/maps/api/distancematrix/json?origins={pointa}&destinations={pointb}&mode=driving&language=en-EN&sensor=false"; 
+    public static final String GOOGLE_MAPS_API_DISTANCE_ENDPOINT = "http://maps.googleapis.com/maps/api/distancematrix/json?origins={latA},{lngA}&destinations={latB},{lngB}&mode=driving&language=en-EN&sensor=false"; 
 
     private RestTemplate restTemplate;
 
@@ -57,29 +57,33 @@ public class LocationServiceImpl implements LocationService{
     }
     
     @Override
-    public TimeDriving findTimeDriveBetweenTwoPoint(String pointa, String pointb) throws RestClientException, UnsupportedEncodingException {
+    public TimeDriving findTimeDriveBetweenTwoPoint(String latA, String lngA, String latB, String lngB) throws RestClientException, UnsupportedEncodingException {
    
-       Map<?, ?> obj = restTemplate.getForObject(GOOGLE_MAPS_API_DISTANCE_ENDPOINT, Map.class, encode(pointa, "UTF-8"),encode(pointb, "UTF-8")); 
- 
+        Map<?, ?> obj = restTemplate.getForObject(GOOGLE_MAPS_API_DISTANCE_ENDPOINT, Map.class, encode(latA, "UTF-8"),encode(lngA, "UTF-8"), encode(latB, "UTF-8"),encode(lngB, "UTF-8")); 
+       
         // check the response status 
         String status = (String) obj.get("status"); 
         if (!status.equals(STATUS_OK)) { 
+       
             throw new RuntimeException(buildMessage(status)); 
         } 
- 
-        List<?> results = (List<?>) obj.get("rows"); 
-        List<?> elements = (List<?>) results.get(0);
-        Map<?, ?> result = (Map<?, ?>) elements.get(0);
-        Map<?, ?> distance = (Map<?, ?>) result.get("distance"); 
-        Map<?, ?> duration = (Map<?, ?>) result.get("duration"); 
+        
+        List<?> rows = (List<?>) obj.get("rows");
+        
+        Map<?,?> results = (Map<?,?>) rows.get(0);
+        List<?> result = (List<?>) results.get("elements");
+        Map<?,?> element = (Map<?,?>) result.get(0);
+        Map<?, ?> distance = (Map<?, ?>) element.get("distance"); 
+        Map<?, ?> duration = (Map<?, ?>) element.get("duration"); 
  
         TimeDriving newTimeDriving = new TimeDriving();
-        newTimeDriving.setOrigin(pointa);
-        newTimeDriving.setDestination(pointb);
-        newTimeDriving.setTime((Double) duration.get("value"));
-        newTimeDriving.setDistance((Double) distance.get("value"));
+        newTimeDriving.setOrigin(latA+","+lngA);
+        newTimeDriving.setDestination(latB+","+lngB);
+       
+        newTimeDriving.setTime((Integer)duration.get("value"));
+        newTimeDriving.setDistance((Integer) distance.get("value"));
         
-        return new TimeDriving();
+        return newTimeDriving;
     }
     
     private String buildMessage(String status) { 
