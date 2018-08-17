@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Spring Core Online Tutorial - List Positions</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="../static/css/mystyle.css" th:href="@{/css/mystyle.css}" media="screen"/>
+</head>
+<body>
+<script th:src="@{https://maps.googleapis.com/maps/api/js?key=AIzaSyDrcB0UHD76EIItQksUCzP10DY3OZGLHaE}"></script>
+<div id="map"></div>
+<script th:inline="javascript">
+var geocoder;
+var map;
+var directionsDisplay;
+var directionsService = new google.maps.DirectionsService();
+/*<![CDATA[*/
+    var locations = [[${model.positions}]]
+/*]]>*/
+    
+function initialize() {
+  directionsDisplay = new google.maps.DirectionsRenderer();
+  var map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 10,
+    center: new google.maps.LatLng(-11.95, -77.07),
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+  });
+  directionsDisplay.setMap(map);
+  var infowindow = new google.maps.InfoWindow();
+
+  var marker, i;
+  var request = {
+    travelMode: google.maps.TravelMode.DRIVING
+  };
+  for (i = 0; i < locations.length; i++) {
+    marker = new google.maps.Marker({
+      position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+    });
+
+    google.maps.event.addListener(marker, 'click', (function(marker, i) {
+      return function() {
+        infowindow.setContent(locations[i][0]);
+        infowindow.open(map, marker);
+      }
+    })(marker, i));
+
+    if (i == 0) request.origin = marker.getPosition();
+    else if (i == locations.length - 1) request.destination = marker.getPosition();
+    else {
+      if (!request.waypoints) request.waypoints = [];
+      request.waypoints.push({
+        location: marker.getPosition(),
+        stopover: true
+      });
+    }
+
+  }
+  directionsService.route(request, function(result, status) {
+    if (status == google.maps.DirectionsStatus.OK) {
+      directionsDisplay.setDirections(result);
+    }
+  });
+}
+google.maps.event.addDomListener(window, "load", initialize);
+
+</script>
+</body>
+</html>

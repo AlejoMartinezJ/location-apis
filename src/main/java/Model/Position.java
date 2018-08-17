@@ -5,6 +5,21 @@ public class Position {
     private String address;
     private String lat;
     private String lng;
+    private Integer order;
+
+    public Position(String address, String lat, String lng, Integer order) {
+        this.address = address;
+        this.lat = lat;
+        this.lng = lng;
+        this.order = order;
+    }
+    public Integer getOrder() {
+        return order;
+    }
+
+    public void setOrder(Integer order) {
+        this.order = order;
+    }
 
     public String getLat() {
         return lat;

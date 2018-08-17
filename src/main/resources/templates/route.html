@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <link rel="stylesheet" href="mystyle.css" type="text/css"/>
+</head>
+<body>
+<script src="https://maps.googleapis.com/maps/api/js"></script>
+<div id="map"></div>
+<script>
+var geocoder;
+var map;
+var directionsDisplay;
+var directionsService = new google.maps.DirectionsService();
+var locations = [
+  ['Point1', -11.9622, -77.08372, 2],
+  ['Point3', -11.95116, -77.0775, 5],
+  ['Point4', -11.9481, -77.06248, 1],
+  ['Point5', -11.95859, -77.05789, 3],
+  ['Point2', -11.96703, -77.06986, 4],
+  ['Point1', -11.9622, -77.08372, 2]
+];
+
+function initialize() {
+  directionsDisplay = new google.maps.DirectionsRenderer();
+
+
+  var map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 10,
+    center: new google.maps.LatLng(-11.95, -77.07),
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+  });
+  directionsDisplay.setMap(map);
+  var infowindow = new google.maps.InfoWindow();
+
+  var marker, i;
+  var request = {
+    travelMode: google.maps.TravelMode.DRIVING
+  };
+  for (i = 0; i < locations.length; i++) {
+    marker = new google.maps.Marker({
+      position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+    });
+
+    google.maps.event.addListener(marker, 'click', (function(marker, i) {
+      return function() {
+        infowindow.setContent(locations[i][0]);
+        infowindow.open(map, marker);
+      }
+    })(marker, i));
+
+    if (i == 0) request.origin = marker.getPosition();
+    else if (i == locations.length - 1) request.destination = marker.getPosition();
+    else {
+      if (!request.waypoints) request.waypoints = [];
+      request.waypoints.push({
+        location: marker.getPosition(),
+        stopover: true
+      });
+    }
+
+  }
+  directionsService.route(request, function(result, status) {
+    if (status == google.maps.DirectionsStatus.OK) {
+      directionsDisplay.setDirections(result);
+    }
+  });
+}
+google.maps.event.addDomListener(window, "load", initialize);
+</script>
+</body>
+</html>
