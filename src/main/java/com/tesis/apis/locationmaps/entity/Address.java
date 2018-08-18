@@ -11,53 +11,48 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "address")
-public class Address implements Serializable{
+public class Address {
      
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer addressid;
- 
+    private Integer addressid; 
     @Column(name = "address")
-    private String address;
-    
+    private String address;    
     @Column(name = "placeName")
     private String placeName;
-
-    public String getPlaceName() {
-        return placeName;
-    }
-
-    public void setPlaceName(String placeName) {
-        this.placeName = placeName;
-    }
-
+    
+    protected Address() { }
     public Address(String address, String placeName) {
         this.address = address;
         this.placeName = placeName;
     }
 
-    protected Address() {
-        
-    }
-
-    @Override
-    public String toString() {
-        return "Address{" + "id=" + addressid + ", address=" + address + '}';
-    }  
-
-    public Integer getAddressId() {
+    public Integer getAddressid() {
         return addressid;
     }
 
-    public void setId(Integer id) {
-        this.addressid = id;
+    public void setAddressid(Integer addressid) {
+        this.addressid = addressid;
     }
-
+    
+    public String getPlaceName() {
+        return placeName;
+    }
+    public void setPlaceName(String placeName) {
+        this.placeName = placeName;
+    }
     public String getAddress() {
         return address;
     }
 
     public void setAddress(String address) {
         this.address = address;
-    }   
+    }       
+    @Override
+    public String toString() {
+        return "Address{" + "id=" + addressid + ", address=" + address + '}';
+    }  
+
+
+
 }

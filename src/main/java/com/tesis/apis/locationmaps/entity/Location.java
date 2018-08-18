@@ -5,7 +5,6 @@
  */
 package com.tesis.apis.locationmaps.entity;
 
-import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,10 +14,11 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "location")
-public class Location implements Serializable{
+public class Location{
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "locationid")
     private Integer locationid;
     
     @Column(name = "addressid")
@@ -33,8 +33,8 @@ public class Location implements Serializable{
     @Column(name = "lng")
     private String lng;
 
-    public Location(Integer locationID, String placeName, String lat, String lng) {
-        this.addressid = locationID;
+    public Location(Integer addressId, String placeName, String lat, String lng) {
+        this.addressid = addressId;
         this.placeName = placeName;
         this.lat = lat;
         this.lng = lng;
@@ -42,19 +42,29 @@ public class Location implements Serializable{
 
     public Location() {
     }
+
+    public Integer getLocationid() {
+        return locationid;
+    }
+
+    public void setLocationid(Integer locationid) {
+        this.locationid = locationid;
+    }
+
+    public Integer getAddressid() {
+        return addressid;
+    }
+
+    public void setAddressid(Integer addressid) {
+        this.addressid = addressid;
+    }
+    
     public String getPlaceName() {
         return placeName;
     }
 
     public void setPlaceName(String placeName) {
         this.placeName = placeName;
-    }
-    public long getAddressid() {
-        return addressid;
-    }
-
-    public void setAddressid(Integer locationID) {
-        this.addressid = locationID;
     }
 
     public String getLat() {

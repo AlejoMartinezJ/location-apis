@@ -1,16 +1,28 @@
-<!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
-<html>
-    <head>
-        <title>TODO supply a title</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body>
-        <div>TODO write content</div>
-    </body>
+<!DOCTYPE HTML>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit student</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<link type="text/css" rel="stylesheet" th:href="@{../css/bootstrap.min.css}" />
+</head>
+<body>
+<div class="container">
+	<h1>Edit unit</h1>
+	<div class="col-md-4">
+		<form th:object="${umoviles}" th:action="@{../save}" action="#" method="post">
+			<input type="hidden" th:field="*{unitid}" class="form-control"/>
+			<input type="number" step="1" pattern="\d+" th:field="*{locationid}" class="form-control"
+				placeholder="Location ID" />
+			<div style="clear: both; display: block; height: 10px;"></div>
+			<input type="text" th:field="*{nameUnit}" class="form-control"
+				placeholder="Unit Name" />
+			<div style="clear: both; display: block; height: 10px;"></div>
+			<input type="text" th:field="*{status}" class="form-control"
+				placeholder="Status" />
+			<div style="clear: both; display: block; height: 10px;"></div>	
+			<input type="submit" class="btn btn-primary" value="Save"></input>
+		</form>
+	</div>
+</div>
+</body>
 </html>

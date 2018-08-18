@@ -4,5 +4,5 @@ import com.tesis.apis.locationmaps.entity.UMoviles;
 import org.springframework.data.repository.CrudRepository;
 
 public interface UnitsRepository extends CrudRepository<UMoviles, Integer>{
-    
+    UMoviles findByUnitid(Integer id);
 }

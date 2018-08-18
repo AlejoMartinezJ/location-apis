@@ -15,7 +15,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "distance")
-public class Distance implements Serializable{
+public class Distance{
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

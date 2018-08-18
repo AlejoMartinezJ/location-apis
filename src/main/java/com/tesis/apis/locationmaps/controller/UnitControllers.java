@@ -25,20 +25,21 @@ public class UnitControllers {
     	return "units";
     }
 
-    @RequestMapping(value = "add")
+    @RequestMapping(value = "/add")
     public String addUnit(Model model){
-    	model.addAttribute("unit", new UMoviles());
+    	model.addAttribute("umoviles", new UMoviles());
         return "addUnit";
     }	
 
     @RequestMapping(value = "/edit/{id}")
-    public String editUnit(@PathVariable("id") Integer studentId, Model model){
-    	model.addAttribute("unit", unitsRepository.findById(studentId));
+    public String editUnit(@PathVariable("id") Integer unitId, Model model){
+    	model.addAttribute("umoviles", unitsRepository.findByUnitid(unitId));
         return "editUnit";
     }	    
     
     @RequestMapping(value = "save", method = RequestMethod.POST)
     public String save(UMoviles unit){
+        System.out.println(unit.toString());
         unitsRepository.save(unit);
     	return "redirect:/units";
     }

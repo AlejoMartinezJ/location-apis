@@ -35,12 +35,12 @@ public class RouteServiceImpl implements RouteService{
          Optional<UMoviles> umovil = unitsRepository.findById(id);
          if (umovil.isPresent()){
              UMoviles unit = umovil.get();
-             allPositions.add(getObjectFromLocation(locationRepository.findByLocationid(unit.getLocationID()), 1));
+             allPositions.add(getObjectFromLocation(locationRepository.findByLocationid(unit.getLocationid()), 1));
              List<URoute> routes = routeRepository.findByUnitID(unit.getUnitid());         
              for(URoute route : routes){
                 allPositions.add(getObjectFromLocation(locationRepository.findByLocationid(route.getLocationID()), route.getSecuence()));
              }
-             allPositions.add(getObjectFromLocation(locationRepository.findByLocationid(unit.getLocationID()), allPositions.size()));
+             allPositions.add(getObjectFromLocation(locationRepository.findByLocationid(unit.getLocationid()), allPositions.size()));
          } 
          return allPositions;
     }

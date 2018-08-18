@@ -51,7 +51,7 @@ public class LocationServiceImpl implements LocationService{
         
         Address localAddress = addressRepository.findByAddress(address);
         if (localAddress != null) {
-            Location location = locationRepository.findByLocationid(localAddress.getAddressId());
+            Location location = locationRepository.findByLocationid(localAddress.getAddressid());
             if (location != null){            
                 newPosition.setAddress(localAddress.getAddress());
                 newPosition.setLat(location.getLat());
@@ -79,7 +79,7 @@ public class LocationServiceImpl implements LocationService{
         newPosition.setLat(location.get("lat").toString());
         newPosition.setLng(location.get("lng").toString());
         
-        locationRepository.save(new Location(newAddress.getAddressId(), newPosition.getAddress(),newPosition.getLat().toString(), newPosition.getLng().toString()));
+        locationRepository.save(new Location(newAddress.getAddressid(), newPosition.getAddress(),newPosition.getLat().toString(), newPosition.getLng().toString()));
         
         return newPosition;
         
@@ -208,7 +208,7 @@ public class LocationServiceImpl implements LocationService{
         return ""; 
     } 
     private Position getPositionFromAddress(String address){       
-        Location location = locationRepository.findByLocationid(addressRepository.findByAddress(address).getAddressId());
+        Location location = locationRepository.findByLocationid(addressRepository.findByAddress(address).getAddressid());
         if (location != null){
             return new Position(address,location.getLat(), location.getLng(),0);
         }
