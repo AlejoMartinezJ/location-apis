@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Units List</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link type="text/css" rel="stylesheet" th:href="@{css/bootstrap.min.css}" />
+ 
+</head>
+<body>
+<div class="container">
+    <div th:unless="${#lists.isEmpty(allLocations)}">
+    <div class="col-md-4">
+	<h2>HOT SPOTS</h2>
+    </div>        
+    <table class="table table-striped">
+	<tr>
+            <th>ID</th>
+            <th>Address</th>
+            <th>Place Name</th>
+	    <th>Latitud</th>
+            <th>Longitud</th>
+	</tr>  
+    	<tr th:each = "loc : ${allLocations}">
+    		<td th:text="${loc.locationid}"></td>
+                <td th:text="${loc.address}"></td>
+                <td th:text="${loc.placeName}"></td>
+    		<td th:text="${loc.lat}"></td>
+                <td th:text="${loc.lng}"></td>
+    		<td>
+    	        <a th:href="@{/location/edit/{id}(id=${loc.locationid})}" class="btn btn-primary btn-xs">Edit</a>
+    		<a th:href="@{/location/delete/{id}(id=${loc.locationid})}" class="btn btn-danger btn-xs">Delete</a>
+    		</td>
+    	</tr>
+    </table>
+    </div>
+    <div class="row bg-info">
+      <div class="col-sm-6">
+        <h2>Add Hot Spot</h2>
+        <form action="/location/save" th:action="@{/location/save}" th:object="${location}" method="post">  
+            <input th:type="hidden" th:field="${location.locationid}" />
+            <div style="clear: both; display: block; height: 10px;"></div>
+            <input type="text" th:field="*{address}" class="form-control" placeholder="Address" />
+            <div style="clear: both; display: block; height: 10px;"></div>        
+            <input type="text" th:field="*{placeName}" class="form-control" placeholder="Place name" />
+            <div style="clear: both; display: block; height: 10px;"></div>        
+            <input type="text" th:field="*{lat}" class="form-control" placeholder="Latitud" />
+            <div style="clear: both; display: block; height: 10px;"></div>        
+            <input type="text" th:field="*{lng}" class="form-control" placeholder="Longitud" />            
+            <button type="submit" name="save" class="btn btn-default">  Add  </button>  
+            <a href="#" th:href="@{/hotSpots}" class="btn btn-danger" role="button">Cancel</a>
+        </form> 
+      </div>      
+    </div>    
+</div>
+</body>
+</html>

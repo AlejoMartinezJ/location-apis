@@ -2,9 +2,7 @@ package com.tesis.apis.locationmaps.service.impl;
 
 import Model.Position;
 import Model.TimeDriving;
-import com.tesis.apis.locationmaps.entity.Address;
 import com.tesis.apis.locationmaps.entity.Location;
-import com.tesis.apis.locationmaps.jpa.AddressRepository;
 import com.tesis.apis.locationmaps.jpa.LocationRepository;
 import java.io.UnsupportedEncodingException;
 import static java.net.URLEncoder.encode;
@@ -17,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 import com.tesis.apis.locationmaps.service.LocationService;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Optional;
 
 @Service
 public class LocationServiceImpl implements LocationService{
@@ -28,19 +27,19 @@ public class LocationServiceImpl implements LocationService{
     public static final String STATUS_INVALID_REQUEST = "INVALID_REQUEST"; 
 
         // google maps api endpoint 
-    public static final String GOOGLE_MAPS_API_LOCATION_ENDPOINT = "http://maps.googleapis.com/maps/api/geocode/json?address={address}&sensor=false"; 
-    public static final String GOOGLE_MAPS_API_DISTANCE_ENDPOINT = "http://maps.googleapis.com/maps/api/distancematrix/json?origins={latA},{lngA}&destinations={latB},{lngB}&mode=driving&language=en-EN&sensor=false"; 
+    public static final String GOOGLE_MAPS_API_LOCATION_ENDPOINT = "https://maps.googleapis.com/maps/api/geocode/json?address={address}&key=AIzaSyDrcB0UHD76EIItQksUCzP10DY3OZGLHaE"; 
+    //public static final String GOOGLE_MAPS_API_LOCATION_ENDPOINT = "https://maps.googleapis.com/maps/api/geocode/json?&address={address}&sensor=false"; 
+
+    public static final String GOOGLE_MAPS_API_DISTANCE_ENDPOINT = "http://maps.googleapis.com/maps/api/distancematrix/json?origins={latA},{lngA}&destinations={latB},{lngB}&mode=driving&language=en-EN&key=AIzaSyDrcB0UHD76EIItQksUCzP10DY3OZGLHaE"; 
 
     private final RestTemplate restTemplate;
-    private final AddressRepository addressRepository;
+   
     private final LocationRepository locationRepository;
 
     @Autowired
     public LocationServiceImpl(RestTemplate restTemplate, 
-            AddressRepository addressRepository,
             LocationRepository locationRepository) {
         this.restTemplate = restTemplate;
-        this.addressRepository = addressRepository;
         this.locationRepository = locationRepository;
     }
        
@@ -48,17 +47,14 @@ public class LocationServiceImpl implements LocationService{
     public Position findLocationAddress(String address) throws RestClientException, UnsupportedEncodingException {
         
         Position newPosition = new Position();
-        
-        Address localAddress = addressRepository.findByAddress(address);
-        if (localAddress != null) {
-            Location location = locationRepository.findByLocationid(localAddress.getAddressid());
-            if (location != null){            
-                newPosition.setAddress(localAddress.getAddress());
-                newPosition.setLat(location.getLat());
-                newPosition.setLng(location.getLng());
+        Optional<Location> objLoc = locationRepository.findByAddress(address);
+        if (objLoc.isPresent()){ 
+                Location loc = objLoc.get();
+                newPosition.setAddress(address);
+                newPosition.setLat(loc.getLat());
+                newPosition.setLng(loc.getLng());
                 return newPosition;
-            }           
-        }
+        }           
                 
         Map<?, ?> obj = restTemplate.getForObject(GOOGLE_MAPS_API_LOCATION_ENDPOINT, Map.class, encode(address, "UTF-8")); 
  
@@ -67,9 +63,7 @@ public class LocationServiceImpl implements LocationService{
         if (!status.equals(STATUS_OK)) { 
             throw new RuntimeException(buildMessage(status)); 
         }
-        
-        Address newAddress = addressRepository.save(new Address(address, address));
-        
+               
         List<?> results = (List<?>) obj.get("results"); 
         Map<?, ?> result = (Map<?, ?>) results.get(0); 
         Map<?, ?> geometry = (Map<?, ?>) result.get("geometry"); 
@@ -79,7 +73,7 @@ public class LocationServiceImpl implements LocationService{
         newPosition.setLat(location.get("lat").toString());
         newPosition.setLng(location.get("lng").toString());
         
-        locationRepository.save(new Location(newAddress.getAddressid(), newPosition.getAddress(),newPosition.getLat().toString(), newPosition.getLng().toString()));
+        locationRepository.save(new Location(address, address,newPosition.getLat().toString(), newPosition.getLng().toString()));
         
         return newPosition;
         
@@ -113,7 +107,7 @@ public class LocationServiceImpl implements LocationService{
         
         return newTimeDriving;
     }
-    
+    @Override
     public Integer[][] buildMatrixOfTime(List<String> positions, String placeBase)
     {
            
@@ -194,7 +188,52 @@ public class LocationServiceImpl implements LocationService{
         
         return routeModel;
     }
+    @Override
+    public List<Location> getAllHotSpots(){
+        return locationRepository.findAll();
+    }
     
+    @Override
+    public void deleteHotSpot(Integer id){
+        locationRepository.deleteById(id);
+    }
+    /*
+    @Override
+    public Location saveHotSpot(Location location){
+            
+        Optional<Location> objLoc = locationRepository.findByAddress(location.getAddress());
+        if (objLoc.isPresent()){ 
+                return objLoc.get();
+        }           
+        try{        
+            Map<?, ?> obj = restTemplate.getForObject(GOOGLE_MAPS_API_LOCATION_ENDPOINT, Map.class, encode(location.getAddress(), "UTF-8")); 
+            String status = (String) obj.get("status"); 
+            if (!status.equals(STATUS_OK)) { 
+               throw new RuntimeException(buildMessage(status)); 
+            }
+            List<?> results = (List<?>) obj.get("results"); 
+            Map<?, ?> result = (Map<?, ?>) results.get(0); 
+            Map<?, ?> geometry = (Map<?, ?>) result.get("geometry"); 
+            Map<?, ?> gpsloc = (Map<?, ?>) geometry.get("location"); 
+        
+            location.setLat(gpsloc.get("lat").toString());
+            location.setLng(gpsloc.get("lng").toString());
+            location.setPlaceName(location.getAddress());
+            locationRepository.save(location);
+ 
+            return location;
+        }catch(UnsupportedEncodingException e){
+            e.printStackTrace();
+        }
+        // check the response status 
+        return location;
+    }
+    */
+    @Override
+    public Location saveHotSpot(Location location){          
+           return locationRepository.save(location);
+
+    }
     private String buildMessage(String status) { 
         if (status == null ? STATUS_ZERO_RESULTS == null : status.equals(STATUS_ZERO_RESULTS)) 
             return "No result is found"; 
@@ -208,10 +247,11 @@ public class LocationServiceImpl implements LocationService{
         return ""; 
     } 
     private Position getPositionFromAddress(String address){       
-        Location location = locationRepository.findByLocationid(addressRepository.findByAddress(address).getAddressid());
-        if (location != null){
-            return new Position(address,location.getLat(), location.getLng(),0);
+        Optional<Location> location = locationRepository.findByAddress(address);
+        if (location.isPresent()){
+            return new Position(address,location.get().getLat(), location.get().getLng(),0);
         }
         return null;
     }
+    
 }

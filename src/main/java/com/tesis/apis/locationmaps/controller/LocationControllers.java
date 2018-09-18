@@ -2,6 +2,7 @@ package com.tesis.apis.locationmaps.controller;
 
 import Model.Position;
 import Model.TimeDriving;
+import com.tesis.apis.locationmaps.entity.Location;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +20,6 @@ import java.util.Map;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMethod;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -40,7 +40,7 @@ public class LocationControllers {
 
     @Autowired
     private RouteService routeService;
-
+    
     @RequestMapping("/test")
     public String redirToList() {
         return "Congratulation the webApp is working";
@@ -103,18 +103,16 @@ public class LocationControllers {
     @RequestMapping("/route/{id}")
     public ModelAndView routePage(@PathVariable("id") Integer id) {
         Map<String,Object> model = new HashMap<String,Object>();
-        List<Object[]> allPositions = new ArrayList<>();
-        
-        allPositions = routeService.getRouteOfUnit(id);
-        
+        List<Object[]> allPositions = new ArrayList<>();        
+        allPositions = routeService.getRouteOfUnit(id);       
         //allPositions.add(new Object[]{"Point1", -11.9622, -77.08372, 2});
         //allPositions.add(new Object[]{"Point3", -11.95116, -77.0775, 5});
         //allPositions.add(new Object[]{"Point4", -11.9481, -77.06248, 1});
         //allPositions.add(new Object[]{"Point5", -11.95859, -77.05789, 3});
         //allPositions.add(new Object[]{"Point2", -11.96703, -77.06986, 4});
         //allPositions.add(new Object[]{"Point1", -11.9622, -77.08372, 2});
-
         model.put("positions", allPositions);
         return new ModelAndView("showUnits", "model", model);
     }
+    
 }

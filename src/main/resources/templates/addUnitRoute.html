@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>ROUTES</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<link type="text/css" rel="stylesheet" th:href="@{../css/bootstrap.min.css}" />	
+</head>
+<body>
+<div class="container">
+	<h1>ADD ROUTE</h1>
+	<form th:action="@{/units/{id}/routes(id=${umoviles.unitid})}" method="get" enctype="multipart/form-data" >
+	<div class="col-md-4">
+		<div class="panel panel-default">
+		    <div class="panel-heading">Student info</div>
+		    <div class="panel-body" style="padding-left: 5px;">
+			Place: <b th:text="${umoviles.nameUnit}" />
+			Location: <b th:text="${umoviles.locationid}" /><br/>
+			Status: <b th:text="${umoviles.status}" /><br/>
+			<br/>Routes:
+				<span th:each="uroute : ${umoviles.routes}">
+					<br/>&nbsp;&nbsp;<span th:text="${uroute.locationid}" />
+				</span>
+				<br/>
+		    </div>
+		</div>	
+		<div class="col-md-6">
+                    <text type="number" step="1" pattern="\d+" th:field="{route.locationid}" class="form-control"
+				placeholder="Location ID" />
+		</div>
+		<input type="submit" name="action" class="btn btn-primary" value="Save"></input>
+		<input type="submit" name="action" class="btn btn-default" value="Cancel"></input>
+	</div>
+	</form>
+</div>
+</body>
+</html>

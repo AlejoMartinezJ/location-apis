@@ -6,11 +6,10 @@
 package com.tesis.apis.locationmaps.jpa;
 
 import com.tesis.apis.locationmaps.entity.Location;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface LocationRepository extends JpaRepository<Location, Integer>{
-    
-        Location findByLocationid(Integer id);
-        
+        Optional<Location> findByAddress(String address);     
         Location findByLatAndLng(String lat,String lng);
 }

@@ -1,8 +1,8 @@
 package com.tesis.apis.locationmaps.service.impl;
 
 import com.tesis.apis.locationmaps.entity.Location;
+import com.tesis.apis.locationmaps.entity.Route;
 import com.tesis.apis.locationmaps.entity.UMoviles;
-import com.tesis.apis.locationmaps.entity.URoute;
 import com.tesis.apis.locationmaps.jpa.LocationRepository;
 import com.tesis.apis.locationmaps.jpa.RouteRepository;
 import com.tesis.apis.locationmaps.jpa.UnitsRepository;
@@ -10,6 +10,7 @@ import com.tesis.apis.locationmaps.service.RouteService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,12 +36,13 @@ public class RouteServiceImpl implements RouteService{
          Optional<UMoviles> umovil = unitsRepository.findById(id);
          if (umovil.isPresent()){
              UMoviles unit = umovil.get();
-             allPositions.add(getObjectFromLocation(locationRepository.findByLocationid(unit.getLocationid()), 1));
-             List<URoute> routes = routeRepository.findByUnitID(unit.getUnitid());         
-             for(URoute route : routes){
-                allPositions.add(getObjectFromLocation(locationRepository.findByLocationid(route.getLocationID()), route.getSecuence()));
+             List<Route> routes = unit.getRoutes();         
+             for(Route route : routes){
+                Optional<Location> loc = locationRepository.findById(route.getLocationid());
+                if (loc.isPresent()){
+                    allPositions.add(getObjectFromLocation(loc.get(), route.getSecuence()));
+                }
              }
-             allPositions.add(getObjectFromLocation(locationRepository.findByLocationid(unit.getLocationid()), allPositions.size()));
          } 
          return allPositions;
     }

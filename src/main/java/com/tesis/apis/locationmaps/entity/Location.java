@@ -21,8 +21,8 @@ public class Location{
     @Column(name = "locationid")
     private Integer locationid;
     
-    @Column(name = "addressid")
-    private Integer addressid;
+    @Column(name = "address")
+    private String address;
     
     @Column(name = "placeName")
     private String placeName;
@@ -33,8 +33,8 @@ public class Location{
     @Column(name = "lng")
     private String lng;
 
-    public Location(Integer addressId, String placeName, String lat, String lng) {
-        this.addressid = addressId;
+    public Location(String address, String placeName, String lat, String lng) {
+        this.address = address;
         this.placeName = placeName;
         this.lat = lat;
         this.lng = lng;
@@ -51,12 +51,12 @@ public class Location{
         this.locationid = locationid;
     }
 
-    public Integer getAddressid() {
-        return addressid;
+    public String getAddress() {
+        return address;
     }
 
-    public void setAddressid(Integer addressid) {
-        this.addressid = addressid;
+    public void setAddress(String address) {
+        this.address = address;
     }
     
     public String getPlaceName() {
@@ -85,7 +85,7 @@ public class Location{
 
     @Override
     public String toString() {
-        return "Location{" + "id=" + locationid +", locationID=" + addressid + ", lat=" + lat + ", lng=" + lng + '}';
+        return "Location{" + "id=" + locationid +", locationID=" + address + ", lat=" + lat + ", lng=" + lng + '}';
     }
     
 }
