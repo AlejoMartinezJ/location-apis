@@ -2,7 +2,6 @@ package com.tesis.apis.locationmaps.controller;
 
 import com.tesis.apis.locationmaps.entity.Route;
 import com.tesis.apis.locationmaps.entity.UMoviles;
-import com.tesis.apis.locationmaps.jpa.RouteRepository;
 import com.tesis.apis.locationmaps.jpa.UnitsRepository;
 import java.sql.Date;
 import java.util.Calendar;
@@ -14,9 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -28,39 +25,55 @@ public class UnitControllers {
     
     @Autowired
     private UnitsRepository unitsRepository; 
-
-    @Autowired
-    private RouteRepository routeRepository; 
-    
-    @ModelAttribute("allUnits")
-    public List<UMoviles> populateUnitss() {
-        return unitsRepository.findAll();
-    }
-    
+        
     @RequestMapping("/units")
     public String showUnits(Model model) {
-        UMoviles umoviles = new UMoviles();
-        model.addAttribute("umoviles",umoviles);     
-        return "unitManager";
+        model.addAttribute("allUnits",unitsRepository.findAll());    
+        return "listUnits";
+    }
+   
+    @RequestMapping(value = {"/unitEdit","/unitEdit/{id}"}, method = RequestMethod.GET)
+    public String editUnit(Model model,@PathVariable(required=false,name="id") Integer unitId){
+        if(null != unitId){
+            Optional<UMoviles> unit = unitsRepository.findById(unitId);
+            if (unit.isPresent()){
+                model.addAttribute("umoviles", unit.get());
+            }else{
+                model.addAttribute("umoviles", new UMoviles());
+            }
+        } else{
+            model.addAttribute("umoviles", new UMoviles());
+        }
+        return "editUnit";
+    }	 
+     
+    @RequestMapping(value = "/unitEdit",method = RequestMethod.POST, params={"save"})
+    public String saveUnit(Model model,UMoviles umoviles) {
+        unitsRepository.save(umoviles);       
+        return "redirect:/unitEdit/"+umoviles.getUnitid();
     }
     
-    @RequestMapping(value = "/units/create", method = RequestMethod.POST)
-    public String saveUnit(UMoviles umoviles, Model model) {
-        //if (bindingResult.hasErrors()) {
-        //    return "redirect:/unitManager";
-        //}
-        
-        this.unitsRepository.save(umoviles);
-        return "redirect:/units";
-    }
-      
-    @RequestMapping(value="/units/add/route", method = RequestMethod.POST)
-    public String addRoute(final UMoviles umoviles, final BindingResult bindingResult) {
+    @RequestMapping(value = "/unitEdit",method = RequestMethod.POST, params={"addRoute"})
+    public String addRouteUnit(UMoviles umoviles) {
         umoviles.getRoutes().add(new Route());
-        return "unitManager";
+        unitsRepository.save(umoviles);
+        return "redirect:/unitEdit/"+umoviles.getUnitid();
     }
     
-    
+    @RequestMapping(value = "/unitEdit",method = RequestMethod.POST, params={"removeRoute"})
+    public String removeRouteUnit(UMoviles umoviles, HttpServletRequest req) {
+        final Integer routeId = Integer.valueOf(req.getParameter("removeRoute"));
+        umoviles.getRoutes().remove(routeId.intValue());
+        unitsRepository.save(umoviles);
+        return "redirect:/unitEdit/"+umoviles.getUnitid();
+    }
+  /*
+    @RequestMapping(value="/units/save", method = RequestMethod.POST, params={"addRoute"})
+    public String addRoute(UMoviles umoviles, Model model) {
+        umoviles.getRoutes().add(new Route());
+        return "redirect:/editUnit";
+    }
+       
     @RequestMapping(value="/units/remove", params={"removeRoute"})
     public String removeRoute(final UMoviles umoviles, final BindingResult bindingResult, final HttpServletRequest req) {
         final Integer routeId = Integer.valueOf(req.getParameter("removeRoute"));
@@ -74,9 +87,8 @@ public class UnitControllers {
         return "addUnit";
     }	
 
-    @RequestMapping(value = "/edit/{id}")
+    @RequestMapping(value = "/units/edit/{id}", method = RequestMethod.GET)
     public String editUnit(@PathVariable("id") Integer unitId, Model model){
-        System.out.println("id = " + unitId);
         Optional<UMoviles> unit = unitsRepository.findById(unitId);
 	if (unit.isPresent()){
             model.addAttribute("umoviles", unit.get());
@@ -84,7 +96,7 @@ public class UnitControllers {
             model.addAttribute("umoviles", new UMoviles());
         }
     	//model.addAttribute("umoviles", unitsRepository.findById(unitId).get());
-        return "editUnit";
+        return "redirecteditUnit";
     }	    
     
     @RequestMapping(value = "save", method = RequestMethod.POST)
@@ -93,22 +105,19 @@ public class UnitControllers {
         unitsRepository.save(unit);
     	return "redirect:/units";
     }
+    */
     
-    @RequestMapping(value = "/units/delete/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/unitDelete/{id}", method = RequestMethod.GET)
     public String deleteUnit(@PathVariable("id") Integer Id, Model model) {
     	unitsRepository.deleteById(Id);
-        return "redirect:/units";
+        model.addAttribute("allUnits",unitsRepository.findAll());
+        return "listUnits";
     }    
-    
-    @RequestMapping(value = "getunits", method = RequestMethod.GET)
-    public @ResponseBody List<UMoviles> getUnits() {
-            return (List<UMoviles>)unitsRepository.findAll();
-    }
-    
+    /*
     @RequestMapping(value = "addUnitRoute/{id}", method = RequestMethod.GET)
     public String addRoute(@PathVariable("id") Integer unitId, Model model){
                 model.addAttribute("route", new Route());
     		model.addAttribute("umoviles", unitsRepository.findById(unitId).get());
     		return "addUnitRoute";
-    }    
+    }    */
 }

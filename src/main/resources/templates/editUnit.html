@@ -3,27 +3,96 @@
 <head>
     <title>Edit student</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<link type="text/css" rel="stylesheet" th:href="@{../css/bootstrap.min.css}" />
+    <link type="text/css" rel="stylesheet" th:href="@{../css/bootstrap.min.css}" />	
 </head>
 <body>
 <div class="container">
-	<h1>Edit unit</h1>
-	<div class="col-md-4">
-		<form th:object="${umoviles}" th:action="@{../save}" action="#" method="post">
-			<input type="hidden" th:field="*{unitid}" class="form-control"/>
-			<input type="number" step="1" pattern="\d+" th:field="*{locationid}" class="form-control"
-				placeholder="Location ID" />
-			<div style="clear: both; display: block; height: 10px;"></div>
-			<input type="text" th:field="*{nameUnit}" class="form-control"
-				placeholder="Unit Name" />
-			<div style="clear: both; display: block; height: 10px;"></div>
-			<input type="text" th:field="*{status}" class="form-control"
-				placeholder="Status" />
-			<div style="clear: both; display: block; height: 10px;"></div>	
-			<input type="submit" class="btn btn-primary" value="Save"></input>
-		</form>
-	</div>
-        
+    <!--
+    <div th:unless="${#lists.isEmpty(allUnits)}"> 
+      <h2 th:text="#{title.list}">UNIDADES</h2>
+      
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th th:text="#{units.unitid}">Id</th>
+            <th th:text="#{units.nameUnit}">Name Unit</th>
+            <th th:text="#{units.locationid}">Location</th>
+            <th th:text="#{units.status}">Status</th>
+            <th th:text="#{units.routes}">Route</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="sb : ${allUnits}">
+            <td><a th:href="@{/route/{id}(id=${sb.unitid})}"><span th:text="${sb.unitid}"></span></a></td>
+            <td th:text="${sb.nameUnit}">Control</td>
+            <td th:text="${sb.locationid}">100</td>
+            <td th:text="${sb.status}">ACTIVE</td>
+            <td>
+              <table class="table table-hover">
+                <tbody>
+                  <tr th:each="row,rowStat : ${sb.routes}">
+                    <td th:text="${rowStat.count}">1</td>
+                    <td th:text="${row.locationid}">20</td>
+                    <td th:text="${row.secuence}">12</td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+            <td>
+            <a th:href="@{/units/delete/{id}(id=${sb.unitid})}" class="btn btn-danger btn-xs">Delete</a>
+            <a th:href="@{/units/edit/{id}(id=${sb.unitid})}" class="btn btn-primary btn-xs">Edit</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>     
+    </div>
+-->
+    <div class="row bg-info">
+      <div class="col-sm-6">
+      <h2>EDIT UNIT</h2>
+      <p>
+          <a href="/units" th:href="@{/units}">Back</a>
+      </p>
+      <form action="#" th:action="@{/unitEdit}" th:object="${umoviles}" method="post">  
+            <input type="hidden" th:field="*{unitid}" class="form-control"/> 
+            <div style="clear: both; display: block; height: 10px;"></div>
+            <input type="number" step="1" pattern="\d+" th:field="*{locationid}" class="form-control" placeholder="Location" /> 
+            <div style="clear: both; display: block; height: 10px;"></div>
+            <input type="text" th:field="*{nameUnit}" class="form-control" placeholder="Unit place name" />
+            <div style="clear: both; display: block; height: 10px;"></div>        
+            <input type="text" th:field="*{status}" class="form-control" placeholder="current status" />
+            <div>              
+               <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th th:text="#{units.route.head.num}">id</th>
+                        <th th:text="#{units.route.head.location}">Location</th>
+                        <th th:text="#{units.route.head.secuence}">Sec</th>
+                        <th>
+                            <button type="submit" name="addRoute" class="btn btn-primary btn-xs"> Add route </button>
+                        </th>
+                    </tr>
+               </thead>
+               <tbody>
+                    <tr th:each="route,routeStat : *{routes}">
+                        <td th:text="${routeStat.count}">1</td>
+                        <td> 
+                            <input type="text" th:field="*{routes[__${routeStat.index}__].locationid}"  />
+                        </td>
+                        <td> 
+                            <input type="text" th:field="*{routes[__${routeStat.index}__].secuence}"  />
+                        </td>
+                        <td>
+                            <button type="submit" name="removeRoute" th:value="${routeStat.index}" class="btn btn-danger btn-xs">Remove route</button>
+                        </td>
+                    </tr>
+               </tbody>
+              </table>
+            </div>         
+            <button type="submit" name="save" class="btn btn-default">  Save Changes  </button>                         
+      </form> 
+      </div>      
+    </div>    
 </div>
 </body>
 </html>
