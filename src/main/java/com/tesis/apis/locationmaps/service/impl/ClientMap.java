@@ -13,10 +13,6 @@ import com.google.maps.model.TravelMode;
 import java.io.IOException;
 
 public class ClientMap {
-    	//API_KEY="AIzaSyC-GwtK8z1zbLyyPSkN43d6StDItzu9hrU ";
-        //API_KEY = "AIzaSyDOQ0NoT9r3RI0zYoO3q-p0h14Z4pggpQ0";
-        //api_key = AIzaSyD2MvqQVbfXo3M0mMu4JPGXbaN3y5z9SIg
-        //API_KEY = AIzaSyDrcB0UHD76EIItQksUCzP10DY3OZGLHaE
     private static final String API_KEY = "AIzaSyDrcB0UHD76EIItQksUCzP10DY3OZGLHaE";
     private static long[][] matrix;
     
@@ -78,6 +74,6 @@ public class ClientMap {
         				
         long distApart = result.rows[0].elements[0].duration.inSeconds;
 		
-	return distApart / 60;
+	return distApart;
     }
 }

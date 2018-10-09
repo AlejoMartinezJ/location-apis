@@ -2,15 +2,18 @@ package com.tesis.apis.locationmaps.service.impl;
 
 import Model.Position;
 import Model.TimeDriving;
+import com.google.maps.errors.ApiException;
 import com.tesis.apis.locationmaps.entity.Factor;
 import com.tesis.apis.locationmaps.entity.Location;
 import com.tesis.apis.locationmaps.entity.Spots;
 import com.tesis.apis.locationmaps.jpa.FactorRepository;
 import com.tesis.apis.locationmaps.jpa.LocationRepository;
 import com.tesis.apis.locationmaps.jpa.UnitsRepository;
+import com.tesis.apis.locationmaps.service.LocationService;
 import com.tesis.apis.locationmaps.service.MathModelService;
 import com.tesis.apis.locationmaps.service.SpotsService;
 import com.tesis.apis.locationmaps.service.UMovilesService;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import static java.net.URLEncoder.encode;
 import java.util.ArrayList;
@@ -28,19 +31,19 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class UMovilesServiceImpl implements UMovilesService{
     
-    private final LocationRepository locationRepository;
+    private final LocationService locationService;
     private final FactorRepository factorRepository;
     private final UnitsRepository unitsRepository;
     private final MathModelService mathModelService;
     private final SpotsService spotsService;
     
     @Autowired
-    public UMovilesServiceImpl(LocationRepository locationRepository,
+    public UMovilesServiceImpl(LocationService locationService,
             UnitsRepository unitsRepository,
             MathModelService mathModelService,
             SpotsService spotsService,
             FactorRepository factorRepository) {
-        this.locationRepository = locationRepository;
+        this.locationService = locationService;
         this.unitsRepository = unitsRepository;
         this.mathModelService = mathModelService;
         this.spotsService = spotsService;
@@ -110,32 +113,30 @@ public class UMovilesServiceImpl implements UMovilesService{
             model[i].setSecuence(j+1);
             result.add(model[i]);
             j++;
-        }
-              
-        result.forEach(s -> System.out.println(s.getSecuence() + " " + s.getLocationid()));
-        
+        }             
+        result.forEach(s -> System.out.println(s.getSecuence() + " " + s.getLocationid()));       
         return result;
     }
     
     private String getPositionFromSpot(Integer location){       
-        Optional<Location> obj = locationRepository.findById(location);
-        if (obj.isPresent()){
-            Location l = obj.get();
-            StringBuilder s = new StringBuilder(l.getLat());
-            s.append(",");
-            s.append(l.getLng());
-            return s.toString();
-        }
-        return null;
+        Location obj = locationService.findByLocationID(location);      
+        StringBuilder s = new StringBuilder(obj.getLat());
+        s.append(",");
+        s.append(obj.getLng());
+        return s.toString();
     }
     
     private Integer deriveTimeDriveBetweenTwoPoint(Integer origen, Integer destination)
     {
         String ori = getPositionFromSpot(origen);
         String des = getPositionFromSpot(destination);
+        TimeDriving timeDriving = new TimeDriving();
+        try {
+            timeDriving = locationService.findTimeDriveBetweenTwoPoint(ori, des);
+        } catch (ApiException | InterruptedException | IOException | ClassNotFoundException e) {
+        }
         
-        Random rand = new Random();
-        return rand.nextInt(100);
+        return timeDriving.getTime();
         
         /*
         Optional<Factor> obj = factorRepository.findByOrigenAndDestination(origen.getLocationid(), destination.getLocationid());
@@ -146,8 +147,7 @@ public class UMovilesServiceImpl implements UMovilesService{
         String status = (String) obj.get("status"); 
         if (!status.equals(STATUS_OK)) {        
             throw new RuntimeException(buildMessage(status)); 
-        } 
-        
+        }        
         List<?> rows = (List<?>) obj.get("rows");
         
         Map<?,?> results = (Map<?,?>) rows.get(0);

@@ -14,6 +14,7 @@ public interface LocationService {
     List<Location> getAllHotSpots();
     void deleteHotSpot(Integer id);
     Location saveHotSpot(Location location);
+    Location findByLocationID(Integer location);
     TimeDriving findTimeDriveBetweenTwoPoint(String origen, String destination) throws ApiException, InterruptedException, IOException, ClassNotFoundException;
 
 }

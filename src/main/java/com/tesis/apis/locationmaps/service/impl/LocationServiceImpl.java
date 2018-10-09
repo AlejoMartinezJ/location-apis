@@ -92,7 +92,15 @@ public class LocationServiceImpl implements LocationService{
     @Override
     public Location saveHotSpot(Location location){          
            return locationRepository.save(location);
-
+    }
+    
+    @Override
+    public Location findByLocationID(Integer location){
+        Optional<Location> obj = locationRepository.findById(location);
+        if (obj.isPresent()){
+            return obj.get();
+        }
+        return null;
     }
     /*
     private String buildMessage(String status) { 
