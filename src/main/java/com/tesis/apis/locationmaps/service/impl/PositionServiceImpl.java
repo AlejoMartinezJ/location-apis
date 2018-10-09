@@ -28,7 +28,7 @@ public class PositionServiceImpl implements PositionService{
             Optional<Location> location = locationRepository.findById(pos + 1);
             if (location.isPresent()){
                 Location loc = location.get();
-                 listPosition.add(new Position(loc.getPlaceName(), loc.getLat(), loc.getLng(), i));
+                 //listPosition.add(new Position(loc.getPlaceName(), loc.getLat(), loc.getLng(), i));
                  i++;               
             }
         }

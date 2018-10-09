@@ -1,7 +1,7 @@
 package com.tesis.apis.locationmaps;
 
 import com.tesis.apis.locationmaps.entity.Location;
-import com.tesis.apis.locationmaps.entity.Route;
+import com.tesis.apis.locationmaps.entity.Spots;
 import com.tesis.apis.locationmaps.entity.UMoviles;
 import com.tesis.apis.locationmaps.jpa.LocationRepository;
 import com.tesis.apis.locationmaps.jpa.UnitsRepository;
@@ -9,7 +9,6 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import org.flywaydb.core.Flyway;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -81,21 +80,21 @@ public class LocationMapsApplication {
                         lRepository.save(new Location("Lugar4","Lugar4", "-11.95859", "-77.05789"));
                         lRepository.save(new Location("Lugar5","Lugar5", "-11.96703", "-77.06986"));
                         
-                        Route route1 = new Route(1,1);
-                        Route route2 = new Route(2,2);
-                        Route route3 = new Route(3,3);
-                        Route route4 = new Route(5,4);
-                        Route route5 = new Route(4,5);
-                        Route route6 = new Route(1,6);
-                        List<Route> routeList = new ArrayList<>();
-                        routeList.add(route1);
-                        routeList.add(route2);
-                        routeList.add(route3);
-                        routeList.add(route4);
-                        routeList.add(route5);
-                        routeList.add(route6);
+                        Spots spot1 = new Spots(1,1);
+                        //Route route2 = new Route(2,2);
+                        //Route route3 = new Route(3,3);
+                        //Route route4 = new Route(5,4);
+                        //Route route5 = new Route(4,5);
+                        //Route route6 = new Route(1,6);
+                        List<Spots> spotList = new ArrayList<>();
+                        spotList.add(spot1);
+                        //routeList.add(route2);
+                        //routeList.add(route3);
+                        //routeList.add(route4);
+                        //routeList.add(route5);
+                        //routeList.add(route6);
                         UMoviles umoviles = new UMoviles(1,"Master", "ACTIVE");
-                        umoviles.setRoutes(routeList);
+                        umoviles.setSpots(spotList);
                         urepository.save(umoviles);
                        
 		};

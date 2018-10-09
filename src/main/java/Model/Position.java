@@ -2,17 +2,26 @@ package Model;
 
 public class Position {
     
-    private String address;
+    private Integer locationid;
     private String lat;
     private String lng;
     private Integer order;
 
-    public Position(String address, String lat, String lng, Integer order) {
-        this.address = address;
+    public Position(Integer locationid, String lat, String lng, Integer order) {
+        this.locationid = locationid;
         this.lat = lat;
         this.lng = lng;
         this.order = order;
     }
+
+    public Integer getLocationid() {
+        return locationid;
+    }
+
+    public void setLocationid(Integer locationid) {
+        this.locationid = locationid;
+    }
+    
     public Integer getOrder() {
         return order;
     }
@@ -39,14 +48,5 @@ public class Position {
 
     public Position() {
     }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
 
 }

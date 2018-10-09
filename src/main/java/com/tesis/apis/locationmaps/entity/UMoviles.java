@@ -31,14 +31,17 @@ public class UMoviles {
         cascade = CascadeType.ALL, 
         orphanRemoval = true
     )
-    private List<Route> routes = new ArrayList<>();
+    private List<Spots> spots = new ArrayList<>();
     
-    public UMoviles(){}
+    public UMoviles(){
+        this.status = "CREATED";
+    }
     
     public UMoviles(Integer locationID, String nameUnit, String status) {
         this.locationid = locationID;
         this.nameUnit = nameUnit;
         this.status = status;
+        this.spots = new ArrayList<>();
     }
 
     public Integer getUnitid() {
@@ -72,12 +75,16 @@ public class UMoviles {
         this.status = status;
     }   
 
-    public List<Route> getRoutes() {
-        return routes;
+    public List<Spots> getSpots() {
+        return spots;
     }
     
-    public void setRoutes(List<Route> routes) {
-        this.routes = routes;
+    public void setSpots(List<Spots> routes) {       
+        //this.spots = routes;
+        this.spots.clear();
+        if (routes != null) {
+            this.spots.addAll(routes);
+        }
     }
 
     @Override

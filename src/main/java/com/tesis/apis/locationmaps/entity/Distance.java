@@ -1,11 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.tesis.apis.locationmaps.entity;
 
-import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -21,11 +15,11 @@ public class Distance{
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer distanceid;
     
-    @Column(name = "origenID")
-    private Integer origenID;
+    @Column(name = "origenid")
+    private Integer origenid;
     
-    @Column(name = "destinationID")
-    private Integer destinationID;    
+    @Column(name = "destinationid")
+    private Integer destinationid;    
     
     @Column(name = "distance")
     private int distance;    
@@ -33,9 +27,9 @@ public class Distance{
     @Column(name = "timeDriving")
     private int timeDriving; 
 
-    public Distance(Integer origenID, Integer destinationID, Integer distance, Integer timeDriving) {
-        this.origenID = origenID;
-        this.destinationID = destinationID;
+    public Distance(Integer origenid, Integer destinationid, Integer distance, Integer timeDriving) {
+        this.origenid = origenid;
+        this.destinationid = destinationid;
         this.distance = distance;
         this.timeDriving = timeDriving;
     }
@@ -43,20 +37,20 @@ public class Distance{
     public Distance() {
     }
 
-    public Integer getOrigenID() {
-        return origenID;
+    public Integer getOrigenid() {
+        return origenid;
     }
 
-    public void setOrigenID(Integer origenID) {
-        this.origenID = origenID;
+    public void setOrigenid(Integer origenid) {
+        this.origenid = origenid;
     }
 
-    public Integer getDestinationID() {
-        return destinationID;
+    public Integer getDestinationid() {
+        return destinationid;
     }
 
-    public void setDestinationID(Integer destinationID) {
-        this.destinationID = destinationID;
+    public void setDestinationid(Integer destinationid) {
+        this.destinationid = destinationid;
     }
 
     public Integer getDistance() {
@@ -77,6 +71,6 @@ public class Distance{
 
     @Override
     public String toString() {
-        return "Distance{" + "id=" + distanceid + ", origenID=" + origenID + ", destinationID=" + destinationID + ", distance=" + distance + ", timeDriving=" + timeDriving + '}';
+        return "Distance{" + "id=" + distanceid + ", origenID=" + origenid + ", destinationID=" + destinationid + ", distance=" + distance + ", timeDriving=" + timeDriving + '}';
     }
 }

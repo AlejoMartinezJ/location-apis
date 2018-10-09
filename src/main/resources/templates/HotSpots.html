@@ -11,7 +11,7 @@
 <div class="container">
     <div th:unless="${#lists.isEmpty(allLocations)}">
     <div class="col-md-4">
-	<h2>HOT SPOTS</h2>
+	<h2>SPOTS</h2>
     </div>        
     <table class="table table-striped">
 	<tr>
@@ -28,7 +28,7 @@
     		<td th:text="${loc.lat}"></td>
                 <td th:text="${loc.lng}"></td>
     		<td>
-    	        <a th:href="@{/location/edit/{id}(id=${loc.locationid})}" class="btn btn-primary btn-xs">Edit</a>
+    	        <a th:href="@{/location/edit/{id}(id=${loc.locationid})}" class="btn btn-primary btn-xs"> Edit </a>
     		<a th:href="@{/location/delete/{id}(id=${loc.locationid})}" class="btn btn-danger btn-xs">Delete</a>
     		</td>
     	</tr>
@@ -47,8 +47,8 @@
             <input type="text" th:field="*{lat}" class="form-control" placeholder="Latitud" />
             <div style="clear: both; display: block; height: 10px;"></div>        
             <input type="text" th:field="*{lng}" class="form-control" placeholder="Longitud" />            
-            <button type="submit" name="save" class="btn btn-default">  Add  </button>  
-            <a href="#" th:href="@{/hotSpots}" class="btn btn-danger" role="button">Cancel</a>
+            <button type="submit" name="save" class="btn btn-default"><img th:src="@{../css/pin.png}" id="hotSpot" height="20px" width="20px"/></button>  
+            <a href="#" th:href="@{/hotSpots}" class="btn btn-danger btn-xs" role="button">Cancel</a>
         </form> 
       </div>      
     </div>    

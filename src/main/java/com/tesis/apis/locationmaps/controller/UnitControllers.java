@@ -1,37 +1,55 @@
 package com.tesis.apis.locationmaps.controller;
 
-import com.tesis.apis.locationmaps.entity.Route;
+import com.tesis.apis.locationmaps.entity.Spots;
 import com.tesis.apis.locationmaps.entity.UMoviles;
 import com.tesis.apis.locationmaps.jpa.UnitsRepository;
-import java.sql.Date;
-import java.util.Calendar;
-import java.util.HashMap;
+import com.tesis.apis.locationmaps.service.MathModelService;
+import com.tesis.apis.locationmaps.service.SpotsService;
+import com.tesis.apis.locationmaps.service.UMovilesService;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class UnitControllers {
     
     @Autowired
-    private UnitsRepository unitsRepository; 
-        
+    private UnitsRepository unitsRepository;
+    @Autowired
+    private UMovilesService umovilesService;
+    @Autowired
+    private SpotsService spotsService;
+    
     @RequestMapping("/units")
     public String showUnits(Model model) {
         model.addAttribute("allUnits",unitsRepository.findAll());    
         return "listUnits";
     }
-   
+
+    @RequestMapping(value = "/units/tsp/{id}")
+    public String CalcTspRoute(Model model, @PathVariable("id") Integer unitId) {
+        if(null != unitId){
+            Optional<UMoviles> obj = unitsRepository.findById(unitId);
+            if (obj.isPresent()){
+                UMoviles unit = obj.get();
+                List<Spots> spots = unit.getSpots();
+                List<Spots> s = umovilesService.buildMatrixOfTime(spots);
+                unit.setSpots(s);
+                unit.setStatus("ACTIVE");
+                unitsRepository.save(unit);
+            }
+        }
+        //model.addAttribute("allUnits",unitsRepository.findAll());
+        return "redirect:/units";        
+    }
+    
     @RequestMapping(value = {"/unitEdit","/unitEdit/{id}"}, method = RequestMethod.GET)
     public String editUnit(Model model,@PathVariable(required=false,name="id") Integer unitId){
         if(null != unitId){
@@ -49,13 +67,19 @@ public class UnitControllers {
      
     @RequestMapping(value = "/unitEdit",method = RequestMethod.POST, params={"save"})
     public String saveUnit(Model model,UMoviles umoviles) {
+        if(umoviles.getSpots().isEmpty()){
+            Spots spot = new Spots();
+            spot.setLocationid(umoviles.getLocationid());
+            spot.setSecuence(1);
+            umoviles.getSpots().add(spot);
+        }
         unitsRepository.save(umoviles);       
         return "redirect:/unitEdit/"+umoviles.getUnitid();
     }
     
     @RequestMapping(value = "/unitEdit",method = RequestMethod.POST, params={"addRoute"})
     public String addRouteUnit(UMoviles umoviles) {
-        umoviles.getRoutes().add(new Route());
+        umoviles.getSpots().add(new Spots());
         unitsRepository.save(umoviles);
         return "redirect:/unitEdit/"+umoviles.getUnitid();
     }
@@ -63,7 +87,7 @@ public class UnitControllers {
     @RequestMapping(value = "/unitEdit",method = RequestMethod.POST, params={"removeRoute"})
     public String removeRouteUnit(UMoviles umoviles, HttpServletRequest req) {
         final Integer routeId = Integer.valueOf(req.getParameter("removeRoute"));
-        umoviles.getRoutes().remove(routeId.intValue());
+        umoviles.getSpots().remove(routeId.intValue());
         unitsRepository.save(umoviles);
         return "redirect:/unitEdit/"+umoviles.getUnitid();
     }
