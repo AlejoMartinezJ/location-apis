@@ -93,10 +93,15 @@ public class LocationMapsApplication {
                         //routeList.add(route4);
                         //routeList.add(route5);
                         //routeList.add(route6);
-                        UMoviles umoviles = new UMoviles(1,"Master", "ACTIVE");
-                        umoviles.setSpots(spotList);
-                        urepository.save(umoviles);
-                       
+                        UMoviles umovil1 = new UMoviles(1,"UI1002", "HOLD");
+                        umovil1.setSpots(spotList);
+                        urepository.save(umovil1);
+                        UMoviles umovil2 = new UMoviles(2,"UI1003", "HOLD");
+                        umovil2.setSpots(spotList);
+                        urepository.save(umovil2);                        
+                        UMoviles umovil3 = new UMoviles(3,"UI2001", "HOLD");
+                        umovil3.setSpots(spotList);
+                        urepository.save(umovil3);                       
 		};
 	}
         
