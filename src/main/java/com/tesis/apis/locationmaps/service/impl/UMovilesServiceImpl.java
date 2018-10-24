@@ -1,32 +1,24 @@
 package com.tesis.apis.locationmaps.service.impl;
 
-import Model.Position;
 import Model.TimeDriving;
 import com.google.maps.errors.ApiException;
 import com.tesis.apis.locationmaps.entity.Factor;
 import com.tesis.apis.locationmaps.entity.Location;
 import com.tesis.apis.locationmaps.entity.Spots;
+import com.tesis.apis.locationmaps.entity.UMoviles;
 import com.tesis.apis.locationmaps.jpa.FactorRepository;
-import com.tesis.apis.locationmaps.jpa.LocationRepository;
 import com.tesis.apis.locationmaps.jpa.UnitsRepository;
 import com.tesis.apis.locationmaps.service.LocationService;
 import com.tesis.apis.locationmaps.service.MathModelService;
 import com.tesis.apis.locationmaps.service.SpotsService;
 import com.tesis.apis.locationmaps.service.UMovilesService;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import static java.net.URLEncoder.encode;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.Random;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 
 @Service
 public class UMovilesServiceImpl implements UMovilesService{
@@ -49,9 +41,26 @@ public class UMovilesServiceImpl implements UMovilesService{
         this.spotsService = spotsService;
         this.factorRepository = factorRepository;
     }
-        
     @Override
-    public List<Spots> buildMatrixOfTime(List<Spots> positions)
+    public void calcNewRouteAsync(Integer UnitId){
+        Optional<UMoviles> obj = unitsRepository.findById(UnitId);
+        if (obj.isPresent()){
+            UMoviles unit = obj.get();
+            unit.setStatus("WORKING");
+            unitsRepository.save(unit);
+            optimizeRouteOfUnit(unit);
+        }
+    }
+    
+    private void optimizeRouteOfUnit(UMoviles unit){
+            List<Spots> spots = unit.getSpots();
+            List<Spots> s = buildMatrixOfTime(spots);
+            unit.setSpots(s);
+            unit.setStatus("ACTIVE");
+            unitsRepository.save(unit);       
+    }
+    
+    private List<Spots> buildMatrixOfTime(List<Spots> positions)
     {   //  index    locationid   
         //0,1,2,3,4  [1,4,5,2,3]
         Spots[] model = positions.toArray(new Spots[positions.size()]);
@@ -59,7 +68,7 @@ public class UMovilesServiceImpl implements UMovilesService{
               
         for (int i = 0; i< model.length; i++){
             hmodel[i] = model[i].getLocationid();
-            System.out.println(model[i].getSecuence() + "  " + model[i].getLocationid());
+            //System.out.println(model[i].getSecuence() + "  " + model[i].getLocationid());
         }
         
         Integer[] vmodel = hmodel;                
@@ -75,7 +84,8 @@ public class UMovilesServiceImpl implements UMovilesService{
                     Optional<Factor> obj = factorRepository.findByOrigenAndDestination(vmodel[i],
                         hmodel[j]);
                     if(obj.isPresent()){
-                        routeModel[i][j] = obj.get().getDistance();
+                        System.out.println("time found " + obj.get().getTime());
+                        routeModel[i][j] = obj.get().getTime();
                     }else{
                         routeModel[i][j] = deriveTimeDriveBetweenTwoPoint(vmodel[i], hmodel[j]);
                         factorRepository.save(new Factor(vmodel[i], 
@@ -84,25 +94,14 @@ public class UMovilesServiceImpl implements UMovilesService{
                     }
                 }
             }    
-        }                    
-                /*  
-                try {
-                    routeModel[j+1][k+1] = findTimeDriveBetweenTwoPoint(
-                        model.get(route[j]).getLat(),
-                        model.get(route[j]).getLng(),
-                        model.get(route[k]).getLat(),
-                        model.get(route[k]).getLng()).getTime();
-                }catch (UnsupportedEncodingException | RestClientException ex) {
-                        return null;
-                }   
-                */        
+        }                       
         System.out.println("Matrix:");
-        for(int j=0; j< md; j++){
-            for (int k=0; k< md; k++){
-                System.out.print(routeModel[j][k] + ", ");
-            }
-            System.out.println("");
-        } 
+       // for(int j=0; j< md; j++){
+       //     for (int k=0; k< md; k++){
+       //         System.out.print(routeModel[j][k] + ", ");
+       //     }
+       //     System.out.println("");
+       // } 
         
         List<Integer> model1 = mathModelService.resolveTspModel(routeModel);
         
@@ -128,6 +127,7 @@ public class UMovilesServiceImpl implements UMovilesService{
     
     private Integer deriveTimeDriveBetweenTwoPoint(Integer origen, Integer destination)
     {
+        System.out.println("call cloud to get time entre " + origen + " and " + destination);
         String ori = getPositionFromSpot(origen);
         String des = getPositionFromSpot(destination);
         TimeDriving timeDriving = new TimeDriving();
@@ -167,5 +167,12 @@ public class UMovilesServiceImpl implements UMovilesService{
         }
         return newTimeDriving;
         */
+    }
+
+    @Override
+    public List<UMoviles> findAllActiveUnits() {
+           return  unitsRepository.findAll().stream()
+                   .filter(u -> "ACTIVE".equals(u.getStatus()))
+                   .collect(Collectors.toList());
     }
 }

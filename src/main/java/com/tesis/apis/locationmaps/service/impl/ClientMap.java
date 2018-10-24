@@ -10,17 +10,26 @@ import com.google.maps.model.DistanceMatrix;
 import com.google.maps.model.GeocodingResult;
 import com.google.maps.model.LatLng;
 import com.google.maps.model.TravelMode;
+import com.tesis.apis.locationmaps.components.appProp;
 import java.io.IOException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ClientMap {
-    private static final String API_KEY = "AIzaSyDrcB0UHD76EIItQksUCzP10DY3OZGLHaE";
+    
+    @Autowired
+    private appProp app;
+        
     private static long[][] matrix;
     
-    public static String lookupAddr(String location) throws ApiException, 
+    
+    public String lookupAddr(String location) throws ApiException, 
                                                                  InterruptedException, 
                                                                  IOException {
 	GeoApiContext lookupDoodad = new GeoApiContext.Builder()
-			    .apiKey(API_KEY)
+			    .apiKey(app.getAppkey())
 			    .build();
 	GeocodingResult[] results =  GeocodingApi.geocode(lookupDoodad,
 			    location).await();		
@@ -28,11 +37,11 @@ public class ClientMap {
 	String address = (results[0].formattedAddress);		
 	return address;
     }
-    public static LatLng lookupCoord(String location) throws ApiException, 
+    public LatLng lookupCoord(String location) throws ApiException, 
                                                                       InterruptedException, 
                                                                       IOException {
 	GeoApiContext lookupDoodad = new GeoApiContext.Builder()
-			    .apiKey(API_KEY)
+			    .apiKey(app.getAppkey())
 			    .build();
 	GeocodingResult[] results =  GeocodingApi.geocode(lookupDoodad,
 		                                          location).await();						
@@ -40,10 +49,10 @@ public class ClientMap {
 	//System.out.println(results[0].geometry.location);
 	return coords;
     }
-    public static long getDriveDist(String addrOne, String addrTwo) throws ApiException, InterruptedException, IOException{
+    public long getDriveDist(String addrOne, String addrTwo) throws ApiException, InterruptedException, IOException{
 				
     	GeoApiContext distCalcer = new GeoApiContext.Builder()
-			    .apiKey(API_KEY)
+			    .apiKey(app.getAppkey())
 			    .build();
     	
     	DistanceMatrixApiRequest req = DistanceMatrixApi.newRequest(distCalcer); 
@@ -58,10 +67,10 @@ public class ClientMap {
 		
 	return distApart;
     }
-        public static long getDriveTime(String addrOne, String addrTwo) throws ApiException, InterruptedException, IOException{
+    public long getDriveTime(String addrOne, String addrTwo) throws ApiException, InterruptedException, IOException{
 				
     	GeoApiContext distCalcer = new GeoApiContext.Builder()
-			    .apiKey(API_KEY)
+			    .apiKey(app.getAppkey())
 			    .build();
     	
     	DistanceMatrixApiRequest req = DistanceMatrixApi.newRequest(distCalcer); 

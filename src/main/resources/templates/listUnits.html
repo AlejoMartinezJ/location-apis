@@ -12,13 +12,13 @@
       <p>
           <a href="/unitEdit" th:href="@{/unitEdit}"><img th:src="@{../css/police-car.png}" alt="new unit" height="30px" width="40px"/></a>
       </p>
+      
       <table class="table table-striped">
         <thead>
           <tr>
             <th th:text="#{units.unitid}">Id</th>
             <th th:text="#{units.nameUnit}">Name Unit</th>
             <th th:text="#{units.locationid}">Location</th>
-            <th th:text="#{units.status}">Status</th>
             <th th:text="#{units.routes}">Route</th>
           </tr>
         </thead>
@@ -27,20 +27,25 @@
               
             <td>
                 <div th:switch="${sb.status}">
-                    <p th:case="'ACTIVE'"><a th:href="@{/route/{id}(id=${sb.unitid})}"><img th:src="@{../css/map-icon-image.png}" alt="google route" height="20px" width="20px"/></a></p>
-                    <p th:case="'HOLD'"><a th:href="@{/units/tsp/{id}(id=${sb.unitid})}"><img th:src="@{../css/share.png}" alt="google route" height="20px" width="20px"/></a></p>
+                    <p th:case="'ACTIVE'"><a th:href="@{/units/route/{id}(id=${sb.unitid})}"><img th:src="@{../css/map-icon-image.png}" alt="google route" height="20px" width="20px"/></a></p>
+                    <p th:case="'HOLD'"><a th:href="@{/units/tsp/{id}(id=${sb.unitid})}"><img th:src="@{../css/share.png}" alt="update route" height="20px" width="20px"/></a></p>
+                   <p th:case="'WORKING'"><a th:href="@{/route/{id}(id=${sb.unitid})}"><img th:src="@{../css/working.png}" alt="google route" height="20px" width="20px"/></a></p>
+
                 </div>
             </td>
             <td th:text="${sb.nameUnit}">Control</td>
             <td th:text="${sb.locationid}">100</td>
-            <td th:text="${sb.status}">ACTIVE</td>
+            <td></td>
             <td>
             <a th:href="@{/unitDelete/{id}(id=${sb.unitid})}" class="btn btn-danger btn-xs">Delete</a>
             <a th:href="@{/unitEdit/{id}(id=${sb.unitid})}" class="btn btn-primary btn-xs"> Edit </a>
             </td>
           </tr>
         </tbody>
-      </table>     
+      </table>   
+      <p>
+          <a href="/units/positions" th:href="@{/units/positions}"><img th:src="@{../css/map2.png}" alt="actual positions" height="30px" width="40px"/></a>
+      </p>     
     </div>
  </div>
 </body>

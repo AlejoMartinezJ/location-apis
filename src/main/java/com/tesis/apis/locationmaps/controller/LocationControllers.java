@@ -3,8 +3,7 @@ package com.tesis.apis.locationmaps.controller;
 import Model.Position;
 import Model.TimeDriving;
 import com.google.maps.errors.ApiException;
-import com.tesis.apis.locationmaps.entity.Location;
-import com.tesis.apis.locationmaps.entity.Spots;
+import com.tesis.apis.locationmaps.entity.UMoviles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,20 +13,17 @@ import com.tesis.apis.locationmaps.service.LocationService;
 import com.tesis.apis.locationmaps.service.MathModelService;
 import com.tesis.apis.locationmaps.service.PositionService;
 import com.tesis.apis.locationmaps.service.SpotsService;
+import com.tesis.apis.locationmaps.service.UMovilesService;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import static java.net.URLEncoder.encode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMethod;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
-import org.springframework.web.client.RestClientException;
+
 import org.springframework.web.servlet.ModelAndView;
 
 @RestController
@@ -44,6 +40,9 @@ public class LocationControllers {
    
     @Autowired
     private SpotsService spotsService;
+
+    @Autowired
+    private UMovilesService unitsService;
 
     @RequestMapping("/test")
     public String redirToList() {
@@ -80,11 +79,14 @@ public class LocationControllers {
         return new ResponseEntity<>(timeDriving, HttpStatus.OK);
     }
  
-    @RequestMapping("/route/{id}")
+    @RequestMapping("/units/route/{id}")
     public ModelAndView routePage(@PathVariable("id") Integer id) {
         Map<String,Object> model = new HashMap<String,Object>();
         List<Object[]> allPositions = new ArrayList<>();        
-        allPositions = spotsService.getSpotsOfUnit(id);       
+        allPositions = spotsService.getSpotsOfUnit(id);
+        Object[] init = allPositions.get(0);
+        allPositions.add(init); // end
+        allPositions.forEach(o -> System.out.println(o[0].toString()));
         //allPositions.add(new Object[]{"Point1", -11.9622, -77.08372, 2});
         //allPositions.add(new Object[]{"Point3", -11.95116, -77.0775, 5});
         //allPositions.add(new Object[]{"Point4", -11.9481, -77.06248, 1});
@@ -92,7 +94,20 @@ public class LocationControllers {
         //allPositions.add(new Object[]{"Point2", -11.96703, -77.06986, 4});
         //allPositions.add(new Object[]{"Point1", -11.9622, -77.08372, 2});
         model.put("positions", allPositions);
-        return new ModelAndView("showUnits", "model", model);
+        return new ModelAndView("showUnitRoute", "model", model);
     }
-
+    @RequestMapping("/units/positions")
+    public ModelAndView positionsPage() {
+        Map<String,Object> model = new HashMap<String,Object>();
+        List<Object[]> allPositions = new ArrayList<>();        
+        List<UMoviles> units = unitsService.findAllActiveUnits();
+        allPositions = spotsService.getPositionOfAllUnits(units);
+        allPositions.forEach(o -> System.out.println(o[1].toString() + " " + o[2].toString()));    
+        //allPositions.add(new Object[]{"UI1002", -11.9622, -77.08372, 2});
+        //allPositions.add(new Object[]{"UI1003", -11.95116, -77.0775, 5});
+        //allPositions.add(new Object[]{"UI2001", -11.9481, -77.06248, 1});
+        
+        model.put("positions", allPositions);
+        return new ModelAndView("showUnitsPositions", "model", model);
+    }
 }

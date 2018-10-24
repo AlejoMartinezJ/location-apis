@@ -12,7 +12,7 @@ import javax.persistence.Table;
 public class Spots {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)	
-    private Integer routeid; 
+    private Integer spotid; 
     @Column(name="locationid")
     private Integer locationid;
     @Column(name="secuence")
@@ -26,12 +26,12 @@ public class Spots {
         this.secuence = secuence;
     }
 
-    public Integer getRouteid() {
-        return routeid;
+    public Integer getSpotid() {
+        return spotid;
     }
 
-    public void setRouteid(Integer routeid) {
-        this.routeid = routeid;
+    public void setSpotid(Integer spotid) {
+        this.spotid = spotid;
     }
 
     public Integer getLocationid() {
@@ -52,7 +52,7 @@ public class Spots {
 
     @Override
     public String toString() {
-        return "Spots{" + "routeid=" + routeid + ", locationid=" + locationid + ", secuence=" + secuence + '}';
+        return "Spots{" + "routeid=" + spotid + ", locationid=" + locationid + ", secuence=" + secuence + '}';
     }
         
 }

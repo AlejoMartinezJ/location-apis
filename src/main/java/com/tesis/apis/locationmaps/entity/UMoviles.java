@@ -86,7 +86,20 @@ public class UMoviles {
             this.spots.addAll(routes);
         }
     }
-
+    
+    public void addSpot(Spots spot) {       
+        if (spot != null) {
+            this.spots.add(spot);
+        }
+    }
+    
+    public void removeSpot(Integer ind) {
+        if (this.spots.size() > 1 & ind > 1) {
+            this.spots.remove(ind);
+        } else{
+            this.spots.clear();
+        }
+    }
     @Override
     public String toString() {
         return "UMoviles{" + "unitid=" + unitid + ", locationid=" + locationid + ", nameUnit=" + nameUnit + ", status=" + status + '}';
