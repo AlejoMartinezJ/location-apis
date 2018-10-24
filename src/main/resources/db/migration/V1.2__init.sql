@@ -1,3 +1,4 @@
+CREATE DATABASE TESIS
 DROP TABLE IF EXISTS `umoviles_spots`;
 DROP TABLE IF EXISTS `umoviles`;
 DROP TABLE IF EXISTS `location`;
@@ -61,7 +62,7 @@ INSERT INTO location (address, place_name, lat, lng) VALUES ('lugar5','Uptown', 
 INSERT INTO location (address, place_name, lat, lng) VALUES ('lugar2', 'School','-11.95116', '-77.0775');
 INSERT INTO location (address, place_name, lat, lng) VALUES ('lugar3','Store', '-11.9481', '-77.06248');
 
-INSERT INTO umoviles (locationid, name_unit, status) VALUES (1, 'UI1002', 'HOLD');
+INSERT INTO umoviles (locationid, name_unit, status) VALUES (1, 'UI1002', 'ACTIVE');
 INSERT INTO umoviles (locationid, name_unit, status) VALUES (1, 'UI1003', 'HOLD');
 INSERT INTO umoviles (locationid, name_unit, status) VALUES (1, 'UI2001', 'HOLD');
 
