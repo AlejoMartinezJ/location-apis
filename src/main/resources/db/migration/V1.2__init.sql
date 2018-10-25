@@ -91,7 +91,7 @@ INSERT INTO location (address, place_name, lat, lng) VALUES ('Laura Caller','Lau
 INSERT INTO location (address, place_name, lat, lng) VALUES ('Sol de Oro','Sol de Oro','-11.99749','-77.06408');
 
 
-INSERT INTO umoviles (locationid, name_unit, status) VALUES (1, 'UI1002', 'ACTIVE');
-INSERT INTO umoviles (locationid, name_unit, status) VALUES (1, 'UI1003', 'HOLD');
-INSERT INTO umoviles (locationid, name_unit, status) VALUES (1, 'UI2001', 'HOLD');
+INSERT INTO umoviles (locationid, name_unit, status) VALUES (32, 'UI1002', 'HOLD');
+INSERT INTO umoviles (locationid, name_unit, status) VALUES (33, 'UI1003', 'HOLD');
+INSERT INTO umoviles (locationid, name_unit, status) VALUES (34, 'UI2001', 'HOLD');
 
