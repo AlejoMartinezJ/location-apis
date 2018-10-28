@@ -2,16 +2,32 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" 
                 xmlns:th="http://www.thymeleaf.org">
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-	<title>Units Map</title>
-        <link type="text/css" rel="stylesheet" th:href="@{../css/mystyle.css}" />	
-        <script th:src="@{https://maps.googleapis.com/maps/api/js?key=AIzaSyDrcB0UHD76EIItQksUCzP10DY3OZGLHaE}"></script>
+    <title>Unidades Activas en el Mapa</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link type="text/css" rel="stylesheet" th:href="@{../css/mystyle.css}" />	
+    <script th:src="@{https://maps.googleapis.com/maps/api/js?key=AIzaSyDrcB0UHD76EIItQksUCzP10DY3OZGLHaE}"></script>
 </head>
 <body>
 <div id="route">
-    <h3><label>Call Address: <span th:text="${model.position.placeName}">Name..</span></label></h3>
-    <label>Lat: <span  th:text="${model.position.lat}"></span></label>
-    <label>Lng: <span th:text="${model.position.lng}"></span></label>
+    <div id="info">
+        <label>Punto Caliente : <span th:text="${model.position.placeName}">Name..</span></label>
+        <label>Ubicacion Latitud: <span  th:text="${model.position.lat}">-11.98</span></label>
+        <label>Longitud: <span th:text="${model.position.lng}"></span></label>
+    </div>
+    <div id="calculo">
+      <div th:unless="${#lists.isEmpty(model.dtos)}">
+        <table>
+            <tr>
+                <th>Unidad Activa</th>
+                <th>Tiempo de Legada en (hh:mm:ss)</th>
+            </tr>
+            <tr th:each = "dto : ${model.dtos}">
+                <td th:text="${dto.unitName}"></td>
+                <td th:text="${dto.rTime}"></td>
+            </tr>
+        </table> 
+      </div>
+    </div>
 </div>
 <div id="map" style="height: 80%; width: 100%;"></div>
 <script th:inline="javascript">
@@ -21,7 +37,7 @@
 function initialize() {
     console.log(locations);
 	var map = new google.maps.Map(document.getElementById('map'), {
-		zoom: 15,
+		zoom: 13,
 		center: new google.maps.LatLng(-11.95, -77.07),
 		mapTypeId: google.maps.MapTypeId.ROADMAP
 	});
@@ -32,7 +48,6 @@ function initialize() {
 			position: new google.maps.LatLng(locations[i][1], locations[i][2]),
 			map: map
 		});
-
 		google.maps.event.addListener(marker, 'click', (function (marker, i) {
 			return function () {
 				infowindow.setContent(locations[i][0]);

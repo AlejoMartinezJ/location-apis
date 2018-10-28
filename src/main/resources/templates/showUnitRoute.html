@@ -2,26 +2,26 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Spring Core Online Tutorial - List Positions</title>
+    <title>Spring Core Online Tutorial - List Positions</title>   
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <style>
         html,
-        body {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-            line-height: 1.5;
-        }
-        #map {
-            height: 100%;
-        }
-        a {
-            text-decoration: none;
-        }
+body {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+#map {
+  height: 100%;
+  width: 100%
+}
+a {
+    text-decoration: none;
+}
     </style>
+    <script th:src="@{https://maps.googleapis.com/maps/api/js?key=AIzaSyDrcB0UHD76EIItQksUCzP10DY3OZGLHaE}"></script>
 </head>
 <body>
-<script th:src="@{https://maps.googleapis.com/maps/api/js?key=AIzaSyDrcB0UHD76EIItQksUCzP10DY3OZGLHaE}"></script>
 <div id="map"></div>
 <script th:inline="javascript">
 var geocoder;
@@ -35,7 +35,7 @@ var directionsService = new google.maps.DirectionsService();
 function initialize() {
   directionsDisplay = new google.maps.DirectionsRenderer();
   var map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 10,
+    zoom: 14,
     center: new google.maps.LatLng(-11.95, -77.07),
     mapTypeId: google.maps.MapTypeId.ROADMAP
   });

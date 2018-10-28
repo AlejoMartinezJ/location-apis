@@ -6,4 +6,5 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface UnitsRepository extends CrudRepository<UMoviles, Integer>{
     List<UMoviles> findAll();
+    UMoviles findByNameUnit(String unitName);
 }

@@ -122,20 +122,21 @@ public class LocationControllers {
             Position position = locationService.findLocationAddress(q);
             model.put("position", position);
             List<UMoviles> units = unitsService.findAllActiveUnits();
-            allPositions.add(new Object[]{"Mercado VillaSol", -11.9648527, -77.0783348, 4});
-            allPositions.add(new Object[]{"UI1002", -11.9622, -77.08372, 1});
-            allPositions.add(new Object[]{"UI1003", -11.95116, -77.0775, 2});
-            allPositions.add(new Object[]{"UI2001", -11.9481, -77.06248, 3});
- 
-            //allPositions = spotsService.getListClosestUnits(units,position);
-            allPositions.forEach(o -> System.out.println(o[1].toString() + " " + o[2].toString()));    
+            allPositions = spotsService.getPositionOfAllUnits(units);
+            //allPositions.add(new Object[]{"UI1002", -11.9622, -77.08372, 1});
+            //allPositions.add(new Object[]{"UI1003", -11.95116, -77.0775, 2});
+            //allPositions.add(new Object[]{"UI2001", -11.9481, -77.06248, 3});
+            // add the new to position to compare
+            List<UnidadesDto> dtos = spotsService.getListClosestUnits(allPositions,position);
+            model.put("dtos", dtos);
+            allPositions.add(new Object[]{position.getPlaceName(),position.getLat(), position.getLng(),allPositions.size()+1});
+            //allPositions.add(new Object[]{"Mercado VillaSol", -11.9648527, -77.0783348, 4});           
         } catch (ApiException | InterruptedException | IOException | ClassNotFoundException e) {
             // here you should handle unexpected errors
             // ...
             // throw ex;
         }       
-        model.put("positions", allPositions);
-        
+        model.put("positions", allPositions);        
         return new ModelAndView("emergencyCalls", "model", model);
     }
 }

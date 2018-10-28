@@ -3,10 +3,7 @@ package com.tesis.apis.locationmaps.controller;
 import com.tesis.apis.locationmaps.entity.Spots;
 import com.tesis.apis.locationmaps.entity.UMoviles;
 import com.tesis.apis.locationmaps.jpa.UnitsRepository;
-import com.tesis.apis.locationmaps.service.SpotsService;
 import com.tesis.apis.locationmaps.service.UMovilesService;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +32,6 @@ public class UnitControllers {
         if(null != unitId){
             umovilesService.calcNewRouteAsync(unitId);            
         }       
-        //model.addAttribute("allUnits",unitsRepository.findAll());
         return "redirect:/units";        
     }
     
@@ -85,57 +81,11 @@ public class UnitControllers {
     public String receiveCalls(Model model) {   
         return "emergencyCalls";
     }
-  /*
-    @RequestMapping(value="/units/save", method = RequestMethod.POST, params={"addRoute"})
-    public String addRoute(UMoviles umoviles, Model model) {
-        umoviles.getRoutes().add(new Route());
-        return "redirect:/editUnit";
-    }
-       
-    @RequestMapping(value="/units/remove", params={"removeRoute"})
-    public String removeRoute(final UMoviles umoviles, final BindingResult bindingResult, final HttpServletRequest req) {
-        final Integer routeId = Integer.valueOf(req.getParameter("removeRoute"));
-        umoviles.getRoutes().remove(routeId.intValue());
-        return "unitManager";
-    }
-    
-    @RequestMapping(value = "/add")
-    public String addUnit(Model model){
-    	model.addAttribute("umoviles", new UMoviles());
-        return "addUnit";
-    }	
 
-    @RequestMapping(value = "/units/edit/{id}", method = RequestMethod.GET)
-    public String editUnit(@PathVariable("id") Integer unitId, Model model){
-        Optional<UMoviles> unit = unitsRepository.findById(unitId);
-	if (unit.isPresent()){
-            model.addAttribute("umoviles", unit.get());
-        }else{
-            model.addAttribute("umoviles", new UMoviles());
-        }
-    	//model.addAttribute("umoviles", unitsRepository.findById(unitId).get());
-        return "redirecteditUnit";
-    }	    
-    
-    @RequestMapping(value = "save", method = RequestMethod.POST)
-    public String save(UMoviles unit){
-        System.out.println(unit.toString());
-        unitsRepository.save(unit);
-    	return "redirect:/units";
-    }
-    */
-    
     @RequestMapping(value = "/unitDelete/{id}", method = RequestMethod.GET)
     public String deleteUnit(@PathVariable("id") Integer Id, Model model) {
     	unitsRepository.deleteById(Id);
         model.addAttribute("allUnits",unitsRepository.findAll());
         return "listUnits";
     }    
-    /*
-    @RequestMapping(value = "addUnitRoute/{id}", method = RequestMethod.GET)
-    public String addRoute(@PathVariable("id") Integer unitId, Model model){
-                model.addAttribute("route", new Route());
-    		model.addAttribute("umoviles", unitsRepository.findById(unitId).get());
-    		return "addUnitRoute";
-    }    */
 }

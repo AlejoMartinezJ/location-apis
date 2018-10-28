@@ -9,5 +9,5 @@ import java.util.List;
 public interface SpotsService {
     List<Object[]> getSpotsOfUnit(Integer id);
     List<Object[]> getPositionOfAllUnits(List<UMoviles> units);
-    List<Object[]> getListClosestUnits(List<UMoviles> units, Position position);
+    List<UnidadesDto> getListClosestUnits(List<Object[]> units, Position position);
 }

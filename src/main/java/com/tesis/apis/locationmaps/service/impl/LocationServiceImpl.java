@@ -82,8 +82,9 @@ public class LocationServiceImpl implements LocationService{
         Optional<Location> obj = locationRepository.findById(location);
         if (obj.isPresent()){
             return obj.get();
+        } else {
+            return new Location();
         }
-        return null;
     }
     @Override
     public TimeDriving findTimeDriveBetweenTwoPoint(String origen, String destination) throws ApiException, InterruptedException, IOException, ClassNotFoundException{  

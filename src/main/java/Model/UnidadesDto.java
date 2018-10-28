@@ -2,16 +2,14 @@ package Model;
 public class UnidadesDto {
     private int unitid;
     private String unitName;
-    private String placeName;
-    private String status;
-    private String lat;
-    private String lng;
+    private String rTime;
+    private Integer rDistance;
 
-    public UnidadesDto(int unitid, String unitName, String placeName,String status) {
+    public UnidadesDto(int unitid, String unitName, String t, Integer d) {
         this.unitid = unitid;
         this.unitName = unitName;
-        this.placeName = placeName;
-        this.status = status;
+        this.rTime = t;
+        this.rDistance = d;
     }
 
     public int getUnitid() {
@@ -30,36 +28,19 @@ public class UnidadesDto {
         this.unitName = unitName;
     }
 
-    public String getPlaceName() {
-        return placeName;
+    public String getrTime() {
+        return rTime;
     }
 
-    public void setPlaceName(String placeName) {
-        this.placeName = placeName;
+    public void setrTime(String rTime) {
+        this.rTime = rTime;
     }
 
-    public String getStatus() {
-        return status;
+    public Integer getrDistance() {
+        return rDistance;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getLat() {
-        return lat;
-    }
-
-    public void setLat(String lat) {
-        this.lat = lat;
-    }
-
-    public String getLng() {
-        return lng;
-    }
-
-    public void setLng(String lng) {
-        this.lng = lng;
-    }
-    
+    public void setrDistance(Integer rDistance) {
+        this.rDistance = rDistance;
+    }    
 }
