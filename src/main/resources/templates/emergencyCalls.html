@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+<!DOCTYPE HTML>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" 
                 xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -8,7 +8,12 @@
         <script th:src="@{https://maps.googleapis.com/maps/api/js?key=AIzaSyDrcB0UHD76EIItQksUCzP10DY3OZGLHaE}"></script>
 </head>
 <body>
-<div id="map" style="height: 100%; width: 70%;"></div>
+<div id="route">
+    <h3><label>Call Address: <span th:text="${model.position.placeName}">Name..</span></label></h3>
+    <label>Lat: <span  th:text="${model.position.lat}"></span></label>
+    <label>Lng: <span th:text="${model.position.lng}"></span></label>
+</div>
+<div id="map" style="height: 80%; width: 100%;"></div>
 <script th:inline="javascript">
 /*<![CDATA[*/
     var locations = [[${model.positions}]]
@@ -16,7 +21,7 @@
 function initialize() {
     console.log(locations);
 	var map = new google.maps.Map(document.getElementById('map'), {
-		zoom: 13,
+		zoom: 15,
 		center: new google.maps.LatLng(-11.95, -77.07),
 		mapTypeId: google.maps.MapTypeId.ROADMAP
 	});

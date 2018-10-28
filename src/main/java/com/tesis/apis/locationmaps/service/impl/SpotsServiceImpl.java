@@ -2,6 +2,7 @@ package com.tesis.apis.locationmaps.service.impl;
 
 import Model.Position;
 import Model.Track;
+import Model.UnidadesDto;
 import com.tesis.apis.locationmaps.entity.Location;
 import com.tesis.apis.locationmaps.entity.Spots;
 import com.tesis.apis.locationmaps.entity.UMoviles;
@@ -17,7 +18,6 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -38,7 +38,7 @@ public class SpotsServiceImpl implements SpotsService{
         this.unitsRepository = unitsRepository;
         this.restTemplate = restTemplate;
         this.locationRepository = locationRepository;
-    }   
+    }    
     @Override
     public List<Object[]> getSpotsOfUnit(Integer id) {
          List<Object[]> allPositions = new ArrayList<>();
@@ -75,9 +75,29 @@ public class SpotsServiceImpl implements SpotsService{
         };
         return allPositions;
     }
+    @Override
+    public List<Object[]> getListClosestUnits(List<UMoviles> units, Position pos) {
+        List<Object[]> allPositions = new ArrayList<>();
+        int i = 1; 
+        for (UMoviles u : units){
+            logger.info("Looking up " + u);
+            String url = String.format("http://localhost:8092/tracker/%s", u.getNameUnit());
+            Track result = restTemplate.getForObject(url, Track.class);            
+            allPositions.add(new Object[]{u.getNameUnit(), result.getLat(), result.getLongitude(),i});           
+            i++;           
+        };    
+        allPositions.add(new Object[]{pos.getPlaceName(),pos.getLat(), pos.getLng(),i});
+        return allPositions;
+    }   
     private Object[] getObjectFromLocation(Location loc, Integer i){
         System.out.println(loc.getLat() + ' ' + loc.getLng());
         return new Object[]{loc.getPlaceName(), loc.getLat(),loc.getLng(), i};
-    }
-    
+    }   
+    private String getPlaceName(Integer loc){
+        Optional<Location> obj = locationRepository.findById(loc);
+         if (obj.isPresent()){
+             return obj.get().getPlaceName();
+         }
+         return "";
+    }  
 }

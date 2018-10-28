@@ -2,6 +2,7 @@ package com.tesis.apis.locationmaps.controller;
 
 import Model.Position;
 import Model.TimeDriving;
+import Model.UnidadesDto;
 import com.google.maps.errors.ApiException;
 import com.tesis.apis.locationmaps.entity.UMoviles;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +22,10 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import org.springframework.web.servlet.ModelAndView;
 
@@ -109,5 +112,30 @@ public class LocationControllers {
         
         model.put("positions", allPositions);
         return new ModelAndView("showUnitsPositions", "model", model);
+    }
+    
+    @RequestMapping(value = "/units/reroute", method = RequestMethod.GET)
+    public ModelAndView search(@RequestParam(value = "search", required = false) String q) {
+        Map<String,Object> model = new HashMap<String,Object>();
+        List<Object[]> allPositions = new ArrayList<>();
+        try {
+            Position position = locationService.findLocationAddress(q);
+            model.put("position", position);
+            List<UMoviles> units = unitsService.findAllActiveUnits();
+            allPositions.add(new Object[]{"Mercado VillaSol", -11.9648527, -77.0783348, 4});
+            allPositions.add(new Object[]{"UI1002", -11.9622, -77.08372, 1});
+            allPositions.add(new Object[]{"UI1003", -11.95116, -77.0775, 2});
+            allPositions.add(new Object[]{"UI2001", -11.9481, -77.06248, 3});
+ 
+            //allPositions = spotsService.getListClosestUnits(units,position);
+            allPositions.forEach(o -> System.out.println(o[1].toString() + " " + o[2].toString()));    
+        } catch (ApiException | InterruptedException | IOException | ClassNotFoundException e) {
+            // here you should handle unexpected errors
+            // ...
+            // throw ex;
+        }       
+        model.put("positions", allPositions);
+        
+        return new ModelAndView("emergencyCalls", "model", model);
     }
 }

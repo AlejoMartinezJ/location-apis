@@ -26,18 +26,18 @@ public class LocationServiceImpl implements LocationService{
     }
        
     @Override
-    public Position findLocationAddress(String address) throws ApiException, InterruptedException, IOException, ClassNotFoundException {
-        
-        Position newPosition = new Position();
-        /*
+    public Position findLocationAddress(String address) throws ApiException, InterruptedException, IOException, ClassNotFoundException {       
+        Position newPosition = new Position();        
         Optional<Location> objLoc = locationRepository.findByAddress(address);
         if (objLoc.isPresent()){ 
                 Location loc = objLoc.get();
                 //newPosition.setAddress(address);
                 newPosition.setLat(loc.getLat());
                 newPosition.setLng(loc.getLng());
+                newPosition.setPlaceName(address);
                 return newPosition;
-        }                           
+        }  
+        /*
         Map<?, ?> obj = restTemplate.getForObject(GOOGLE_MAPS_API_LOCATION_ENDPOINT, Map.class, encode(address, "UTF-8")); 
         // check the response status 
         String status = (String) obj.get("status"); 
@@ -55,7 +55,8 @@ public class LocationServiceImpl implements LocationService{
         LatLng tL = clientMap.lookupCoord(address);
         Coord c = new Coord(address, tL);      
         newPosition.setLat(String.valueOf(c.getLat()));       
-        newPosition.setLng(String.valueOf(c.getLng()));       
+        newPosition.setLng(String.valueOf(c.getLng()));
+        newPosition.setPlaceName(address);
         locationRepository.save(new Location(address, address,newPosition.getLat().toString(), newPosition.getLng().toString()));
         
         return newPosition;       

@@ -6,12 +6,14 @@ public class Position {
     private String lat;
     private String lng;
     private Integer order;
+    private String placeName;
 
-    public Position(Integer locationid, String lat, String lng, Integer order) {
+    public Position(Integer locationid, String lat, String lng, Integer order, String name) {
         this.locationid = locationid;
         this.lat = lat;
         this.lng = lng;
         this.order = order;
+        this.placeName = name;
     }
 
     public Integer getLocationid() {
@@ -47,6 +49,14 @@ public class Position {
     }
 
     public Position() {
+    }
+
+    public String getPlaceName() {
+        return placeName;
+    }
+
+    public void setPlaceName(String placeName) {
+        this.placeName = placeName;
     }
 
 }

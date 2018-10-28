@@ -80,6 +80,11 @@ public class UnitControllers {
         unitsRepository.save(umoviles);
         return "redirect:/unitEdit/"+umoviles.getUnitid();
     }
+    
+    @RequestMapping("/units/calls")
+    public String receiveCalls(Model model) {   
+        return "emergencyCalls";
+    }
   /*
     @RequestMapping(value="/units/save", method = RequestMethod.POST, params={"addRoute"})
     public String addRoute(UMoviles umoviles, Model model) {
