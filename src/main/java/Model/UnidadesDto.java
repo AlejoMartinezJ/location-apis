@@ -1,5 +1,8 @@
 package Model;
-public class UnidadesDto {
+
+import java.util.Comparator;
+
+public class UnidadesDto implements Comparable<UnidadesDto>{
     private int unitid;
     private String unitName;
     private String rTime;
@@ -43,4 +46,9 @@ public class UnidadesDto {
     public void setrDistance(Integer rDistance) {
         this.rDistance = rDistance;
     }    
+
+    @Override
+    public int compareTo(UnidadesDto o) {
+        return Integer.valueOf(this.getrTime()) - Integer.valueOf(o.getrTime());
+    }
 }

@@ -92,15 +92,15 @@ public class SpotsServiceImpl implements SpotsService{
                
             } catch (ApiException | InterruptedException | IOException | ClassNotFoundException e) {           
             }  
-            dtos.add(new UnidadesDto(unitsRepository.findByNameUnit(u[0].toString()).getUnitid(), u[0].toString(),convertSecondsToHours(tm.getTime()), tm.getDistance()));                            
+            dtos.add(new UnidadesDto(unitsRepository.findByNameUnit(u[0].toString()).getUnitid(), u[0].toString(),tm.getTime().toString(), tm.getDistance()));                            
         };
-        
-        //dtos.sort(Comparator.comparing(o -> o.getrTime()));
-        List opt = dtos.stream().sorted((o1, o2)->o1.getrTime().
-                                   compareTo(o2.getrTime())).
-                                   collect(Collectors.toList());
-        
-        return opt;
+        Collections.sort(dtos);
+        List<UnidadesDto> out = new ArrayList<>();
+        for (UnidadesDto d: dtos){
+            out.add(new UnidadesDto(d.getUnitid(), d.getUnitName(), convertSecondsToHours(d.getrTime()), 0));
+        }
+ 
+        return out;
     }   
     private Object[] getObjectFromLocation(Location loc, Integer i){
         System.out.println(loc.getLat() + ' ' + loc.getLng());
@@ -116,9 +116,10 @@ public class SpotsServiceImpl implements SpotsService{
         s.append(lng);
         return s.toString();
     }
-    private String convertSecondsToHours(Integer seconds){
-        int p1 = seconds % 60;
-	int p2 = seconds / 60;
+    private String convertSecondsToHours(String seconds){
+        Integer s = Integer.valueOf(seconds);
+        int p1 = s % 60;
+	int p2 = s / 60;
 	int p3 = p2 % 60;
 
 	p2 = p2 / 60;
