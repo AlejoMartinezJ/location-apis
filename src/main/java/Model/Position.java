@@ -60,7 +60,9 @@ public class Position {
         this.placeName = placeName;
     }
     public List<String> getLocationStatus(){
-        return locationStatus;
+        if (this.placeName != null){
+            return locationStatus;
+        }
     }
 
 }
