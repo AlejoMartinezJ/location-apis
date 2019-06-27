@@ -59,5 +59,8 @@ public class Position {
     public void setPlaceName(String placeName) {
         this.placeName = placeName;
     }
+    public List<String> getLocationStatus(){
+        return locationStatus;
+    }
 
 }
