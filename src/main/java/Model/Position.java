@@ -7,6 +7,7 @@ public class Position {
     private String lng;
     private Integer order;
     private String placeName;
+    private boolean status;
 
     public Position(Integer locationid, String lat, String lng, Integer order, String name) {
         this.locationid = locationid;
