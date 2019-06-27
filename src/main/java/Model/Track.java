@@ -10,7 +10,7 @@ import java.util.Date;
 public class Track implements Comparable<Track>{
         private BigDecimal lat;
 	private BigDecimal longitude;
-	
+	private boolean status
         @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone="UTC")
 	private Date timestamp;
 	
