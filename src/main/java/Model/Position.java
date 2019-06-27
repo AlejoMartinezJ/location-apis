@@ -60,7 +60,7 @@ public class Position {
         this.placeName = placeName;
     }
     public List<String> getLocationStatus(){
-        if (this.placeName != null){
+        if (StringUtils.IsNotNull(this.placeName)){
             return locationStatus;
         }
     }
